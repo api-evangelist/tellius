@@ -1,0 +1,94 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/whats-new
+name: Tellius lifecycle
+note: 'Tellius ships as a versioned, customer-deployed platform rather than a
+  continuously deployed multi-tenant service, so its lifecycle is a product-release
+  lifecycle. The API surface is unversioned and rides the platform version.'
+
+versioning:
+  api_versioning: none
+  api_versioning_evidence: 'No version segment, header or media-type version on any
+    documented endpoint: /api/auth/login, /insight, /api/jobs/list,
+    /proxy/ml/external/predict, /oauth/token, /mcp.'
+  product_versioning:
+    scheme: 'MAJOR.MINOR with dotted patch levels'
+    current_version: 6.3.2
+    examples:
+    - '6.3, 6.3.0.1, 6.3.0.2, 6.3.1, 6.3.2'
+    - '6.2, 6.2.0.1 through 6.2.0.6'
+    - '6.1, 6.1.0.1 through 6.1.0.6'
+  documentation_versioning:
+    versioned: true
+    current: '6.3'
+    retained:
+    - '6.3'
+    - '6.2'
+    - '6.1'
+    - '6.0'
+    - '5.6'
+    - '5.5'
+    - '5.4'
+    note: 'help.tellius.com keeps a full documentation tree per retained release
+      (e.g. /tellius-6.2/..., /tellius-6.1/...). Older release notes back to 4.2 are
+      still reachable within the What''s New tree. This is the strongest lifecycle
+      signal Tellius publishes: a customer on 6.0 can still read 6.0 documentation.'
+    source: https://help.tellius.com/llms.txt
+
+release_notes:
+  published: true
+  url: https://help.tellius.com/whats-new
+  cadence: 'Minor releases with a run of patch releases between them; the 6.x line has
+    produced 6.0, 6.1, 6.2 and 6.3 with five to six patches each.'
+  dated: false
+  dated_note: 'Release and patch pages carry version numbers but no publication dates,
+    so the interval between releases cannot be read from the notes themselves.'
+  see: changelog/tellius-changelog.yml
+
+deprecation:
+  policy_published: false
+  evidence: 'Zero occurrences of "deprecat" across the full 565 KB Tellius
+    documentation index. No deprecation policy page, no sunset schedule, no
+    end-of-support matrix for older releases.'
+  headers:
+    deprecation: false
+    sunset: false
+    rfc8594: false
+  note: 'The retained documentation trees imply support for older releases without
+    stating a support window. A customer cannot determine from public documentation
+    when 5.4 stops being supported.'
+
+status_page:
+  published: false
+  probes:
+  - url: https://status.tellius.com/
+    status: '<no response> — DNS does not resolve'
+    checked: '2026-08-30'
+  note: 'No public status page. Consistent with the deployment model — a per-customer
+    Kubernetes install has no shared uptime to report — but it means an integrator has
+    no external health signal for the deployment they call.'
+
+sla:
+  published: false
+  evidence: 'No SLA, uptime commitment or availability target appears in public
+    documentation or on the pricing page. Zero hits for "SLA" and "uptime" in the
+    documentation index.'
+
+support:
+  channel: https://support.tellius.com/support/home
+  status: 200
+  checked: '2026-08-30'
+  note: 'A Freshdesk-hosted support portal.'
+
+deprecated_operations: []
+deprecated_operations_note: 'Cannot be derived — there is no OpenAPI definition to
+  read x-deprecated or deprecated: true from.'
+
+delivery_model:
+  model: customer-deployed
+  detail: 'Tellius installs on Kubernetes in the customer environment or a dedicated
+    cloud deployment; it is also listed on Snowflake Marketplace. The MCP server and
+    every API endpoint run inside that deployment, which is why every base URL in this
+    profile is templated on the customer host rather than naming a shared production
+    host.'
+  source: https://help.tellius.com/getting-started/admin-guide/installation-steps-for-tellius

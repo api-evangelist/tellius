@@ -1,0 +1,124 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/whats-new
+name: Tellius changelog
+scheme: 'MAJOR.MINOR with dotted patch levels (6.3, 6.3.0.1, 6.3.1, 6.3.2)'
+current_version: 6.3.2
+dated: false
+dated_note: 'Release and patch pages carry no publication date. Entries below are
+  ordered newest-first as Tellius lists them; no dates have been invented.'
+url: https://help.tellius.com/whats-new
+machine_readable: false
+machine_readable_note: 'No RSS/Atom feed and no JSON changelog. Every page is however
+  available as Markdown by appending .md to its URL, and the full index is at
+  help.tellius.com/llms.txt, so the changelog IS agent-readable even without a feed.'
+window: 'Recent releases (6.x line). Tellius retains release notes back to 4.2.'
+
+entries:
+- version: 6.3.2
+  url: https://help.tellius.com/whats-new/release-6.3/patch-6.3.2
+  type: patch
+  breaking: []
+  additions:
+  - 'Scheduled Jobs management for Super Users: platform-wide visibility of scheduled
+    jobs with a Created By filter; view details and failures, delete, enable/disable a
+    schedule. Server-side authorization unchanged.'
+  - 'Home page tour for new users.'
+  - 'Table header background colour; sidebar navigation refinements.'
+  changes:
+  - 'Kaiya conversation sharing moves to a READ-ONLY model, with an explicit option to
+    continue a shared conversation as your own copy.'
+  - 'Vizpad Custom Views become independently shareable.'
+  - 'Selective Export gains section-level selection and section ordering.'
+- version: 6.3.1
+  url: https://help.tellius.com/whats-new/release-6.3/patch-6.3.1
+  type: patch
+  breaking: []
+  additions:
+  - 'Security Tags become the platform-wide mechanism for row-level permissions,
+    defined once and applied wherever a user asks — Kaiya conversation, Mission or App.'
+  - 'Kaiya Apps gain live querying behind interactive filters and an Analysis tab that
+    traces how an App was produced.'
+  - 'Vizpad Selective Export, gradient conditional formatting, and export consistency
+    across PDF, PowerPoint, Excel and CSV.'
+  - 'Key-pair authentication for Snowflake; duplicate datasource consolidation;
+    session management under Settings.'
+- version: 6.3
+  url: https://help.tellius.com/whats-new/release-6.3
+  type: minor
+  breaking: []
+  highlights:
+  - 'Tellius MCP server — the analytics engine exposed to any MCP client over
+    streamable HTTP. This is the release that made Tellius agent-callable.'
+  - 'Kaiya browser extension: a side panel on any web page, including Power BI and
+    Tableau dashboards.'
+  - 'Slack and Teams integration — mention @Kaiya in a channel, trigger Missions with
+    slash commands.'
+  - 'Skills: a layer letting admins tune how Kaiya writes, charts and reasons for a
+    given user base without editing system prompts.'
+  - 'Build Kaiya Missions conversationally (Kaiya Architect) — describe the workflow,
+    Kaiya drafts editable steps and executes from the same thread.'
+  - 'Redesigned homepage surfacing scheduled Mission outputs and recent context;
+    new-user onboarding from fresh login to live conversation in about ten minutes.'
+- version: 6.2
+  url: https://help.tellius.com/whats-new/release-6.2
+  type: minor
+  breaking: []
+  highlights:
+  - 'Kaiya Apps — turn a completed analysis into an interactive, role-specific
+    application.'
+  - 'Data Architect — raw tables to a production-ready Business View from within the
+    conversation.'
+  - 'Persistent memory: definitions, corrections and preferences stay learned across
+    sessions and users.'
+  - 'A single conversation can span multiple Business Views, carrying filters, context
+    and history forward.'
+- version: 6.1
+  url: https://help.tellius.com/whats-new/release-6.1
+  type: minor
+  breaking: []
+  highlights:
+  - 'Kaiya grounds internal analytics with external anchor details (event dates,
+    policy effective windows, geographic scope).'
+  - 'Voice Mode with natural multi-turn conversation.'
+  - 'Improved short-term memory across Deep Insights and standard analytics;
+    auto-routing selects the execution path without manual mode switching.'
+  - 'Export text, charts, tables; conversations to Word; Vizpads to Excel/CSV with
+    filter provenance.'
+- version: 6.0
+  url: https://help.tellius.com/whats-new/release-6.0
+  type: major
+  breaking: []
+  highlights:
+  - 'Kaiya Agent Mode — multi-agent planning that turns one question into a planned
+    multi-step analysis, running SQL and Python, validating outputs, and returning a
+    narrative with timing, magnitude, ranked drivers, confidence and next steps.'
+  - 'One-click KPI switching, selective exports and filters, multi-conditional alerts,
+    faster login, responsive Vizpads under load.'
+- version: 6.0.1
+  url: https://help.tellius.com/whats-new/release-6.0/patch-6.0.1
+  type: patch
+  breaking: []
+  additions:
+  - 'Calendar-aware Kaiya with row-level security; real-time job updates; faster
+    Vizpads; smarter filters and tables.'
+- version: 5.6
+  url: https://help.tellius.com/whats-new/release-5.6
+  type: minor
+  breaking: []
+  highlights:
+  - 'From-clause support, Top N queries, smarter date filters, better formatting, and
+    a redesigned Kaiya experience.'
+
+api_relevant_changes:
+- version: 6.3
+  change: 'MCP server introduced — the first machine-callable agent surface Tellius
+    shipped.'
+- version: 6.3.1
+  change: 'Security Tags become the platform-wide row-level permission mechanism,
+    which is the authorization model every API and MCP call now runs under.'
+- version: 6.3.2
+  change: 'Scheduled job enable/disable added, the only reversible-state control on a
+    Tellius write surface.'
+- version: 4.3.2
+  change: 'Stronger API security (per the release note summary).'

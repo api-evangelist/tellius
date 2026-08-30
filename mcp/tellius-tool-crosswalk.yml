@@ -1,0 +1,153 @@
+generated: '2026-08-30'
+method: derived
+source: 'mcp/tellius-mcp.yml + the Tellius REST reference at https://help.tellius.com/api
+  (Authentication, Insights, Search and ML Model API pages)'
+name: Tellius MCP tool to REST operation crosswalk
+note: 'Tellius publishes NO OpenAPI definition, so there are no operationIds to bind
+  to. The rest[] rows below therefore carry documented HTTP method + path strings
+  taken verbatim from the Tellius API reference, and every binding confidence is set
+  accordingly. Because the MCP tools/list endpoint is OAuth-gated (probed 401 with an
+  RFC 9728 challenge on 2026-08-30), tool input schemas were also unavailable, so
+  bindings are by name and documented semantics only. The dominant finding is the
+  divergence itself: the MCP surface and the REST surface are near-disjoint
+  projections of the Tellius platform — the MCP server is built over Kaiya and
+  Business Views, while the documented REST API is built over Insights, Search and ML
+  models, and almost nothing overlaps.'
+
+surfaces:
+  openapi: null
+  openapi_note: 'No OpenAPI/Swagger definition found. Probed /openapi.json,
+    /swagger.json, /api-docs and /v3/api-docs on www.tellius.com, help.tellius.com and
+    the deployment hosts named in Tellius'' own docs; the marketing and docs hosts 404
+    and the deployment hosts answer 401 on every path. The REST reference is prose in
+    GitBook.'
+  graphql: null
+  mcp:
+    url: https://{tellius-deployment-host}/mcp
+    gated: true
+    gate: 'OAuth 2.1 / RFC 9728. tools/list returns 401 invalid_token with
+      WWW-Authenticate: Bearer resource_metadata=...'
+  rest:
+    base: https://{tellius-deployment-host}
+    docs: https://help.tellius.com/api
+    gated: true
+    gate: 'JWT from POST /api/auth/login, or OAuth2 client_credentials for the ML
+      endpoints.'
+  websocket:
+    docs: https://help.tellius.com/api/search-apis
+    note: 'The Search surface is a WebSocket channel, not REST. Requests and responses
+      are correlated by a caller-generated corrId.'
+
+crosswalk:
+- tool: tellius_ask
+  category: ask-and-analyze
+  rest:
+  - 'WS search: {nlpQuery, businessViewId, performQuery:true, enterKeyPress:true, createViz:true, corrId}'
+  binding: semantic
+  confidence: medium
+  note: 'Both take a natural-language question plus a Business View id and return an
+    answer with a visualization/data. The REST-side equivalent is the Search WebSocket
+    "Execute a query" message, not an HTTP operation. tellius_ask additionally returns
+    the generated SQL when include_raw is true; the documented WebSocket response does
+    not show a SQL field.'
+- tool: tellius_get_starter_questions
+  category: ask-and-analyze
+  rest:
+  - 'WS search: {getNlpSuggestionsFor, businessViewId, corrId} (View suggestions)'
+  binding: semantic
+  confidence: low
+  note: 'Adjacent, not equivalent: suggestions complete a partially typed token,
+    starter questions propose whole questions for a Business View.'
+
+mcp_only:
+- tool: tellius_deep_insight
+  reason: 'Multi-step agentic root cause investigation. The REST reference documents
+    listing and deleting Insights, not commissioning an agentic investigation.'
+- tool: tellius_list_business_views
+  reason: 'No public REST operation for Business View discovery is documented.'
+- tool: tellius_get_business_view_details
+  reason: 'Business View column schema is exposed to MCP clients (and as the resource
+    tellius://business-views/{id}/schema) with no documented REST equivalent.'
+- tool: tellius_list_datasets
+  reason: 'No documented public REST dataset listing.'
+- tool: tellius_list_connections
+  reason: 'No documented public REST connection listing.'
+- tool: tellius_send_feedback
+  reason: 'Kaiya-specific; no REST equivalent documented.'
+- tool: tellius_list_workflows
+  reason: 'Kaiya Missions/workflows have no documented public REST surface at all.'
+- tool: tellius_search_workflows
+  reason: 'As above.'
+- tool: tellius_get_workflow
+  reason: 'As above.'
+- tool: tellius_create_workflow
+  reason: 'As above.'
+- tool: tellius_update_workflow
+  reason: 'As above.'
+- tool: tellius_delete_workflow
+  reason: 'As above. Destructive, and no REST path exists to reach or undo it.'
+- tool: tellius_run_workflow
+  reason: 'As above.'
+- tool: tellius_resume_workflow
+  reason: 'As above.'
+- tool: tellius_create_schedule
+  reason: 'Scheduling and delivery are MCP-reachable but have no documented REST API.'
+- tool: tellius_list_schedules
+  reason: 'As above.'
+- tool: tellius_get_schedule
+  reason: 'As above.'
+- tool: tellius_update_schedule
+  reason: 'As above.'
+- tool: tellius_delete_schedule
+  reason: 'As above. Destructive.'
+- tool: tellius_list_slack_channels
+  reason: 'Delivery-channel lookup, MCP only.'
+- tool: tellius_list_teams_channels
+  reason: 'Delivery-channel lookup, MCP only.'
+- tool: tellius_remember_user_preference
+  reason: 'Kaiya Business Memory; no REST equivalent.'
+- tool: tellius_list_user_memories
+  reason: 'As above.'
+
+rest_only:
+- rest: 'POST /api/auth/login'
+  reason: 'Session/JWT issuance. MCP clients authenticate through OAuth instead, so
+    this has no tool counterpart by design.'
+- rest: 'POST /oauth/client_credentials_token'
+  reason: 'OAuth token issuance for the ML endpoints.'
+- rest: 'POST /oauth/refresh_token'
+  reason: 'Token refresh.'
+- rest: 'GET /insight?includingShared&withSharings&limit&offset&onlyShared'
+  reason: 'Insight listing has no MCP tool.'
+- rest: 'DELETE /insight/{insightId}'
+  reason: 'Insight deletion has no MCP tool.'
+- rest: 'PUT /insight/{insightId}'
+  reason: 'Marking an Insight notification consumed has no MCP tool.'
+- rest: 'GET /api/jobs/list?createdBy&limit&type&includeConsumed&offset&sortBy'
+  reason: 'Notification/job listing has no MCP tool.'
+- rest: 'POST /proxy/ml/external/predict'
+  reason: 'ML prediction (JSON payload) is REST-only; no MCP tool exposes trained
+    models.'
+- rest: 'POST /proxy/ml/external/predict/file'
+  reason: 'ML prediction by file upload (CSV or NDJSON, 250 MB cap), REST-only.'
+- rest: 'GET /proxy/ml/external/predict/download?predictedDataId'
+  reason: 'Prediction result download as CSV, REST-only.'
+- rest: 'GET /proxy/ml/external/predict/view?predictedDataId&nrows&rowoffset'
+  reason: 'Paginated prediction result view, REST-only.'
+- rest: 'WS search: requestType history'
+  reason: 'Query history has no MCP tool.'
+- rest: 'WS search: enterKeyPress:false validation'
+  reason: 'Query validation/tokenization has no MCP tool.'
+
+coverage:
+  mcp_tools_total: 25
+  mcp_tools_bound: 2
+  mcp_tools_unbound: 23
+  rest_operations_documented: 13
+  rest_operations_bound: 2
+  rest_operations_unbound: 13
+  overlap_ratio: 0.08
+  finding: 'Roughly 8% of the combined surface is reachable both ways. An integrator
+    who picks one interface loses most of the other: choose MCP and the ML prediction
+    endpoints and Insight management disappear; choose REST and every Kaiya workflow,
+    Mission, schedule and memory capability disappears.'

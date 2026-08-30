@@ -1,0 +1,256 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/kaiya/tellius-mcp-server
+name: Tellius MCP Server
+description: 'Tellius exposes its analytics engine through an MCP server that runs
+  inside each Tellius deployment. The server holds no data of its own — it forwards
+  each request to Kaiya, which interprets the question, generates the SQL, runs the
+  analysis and returns the result, so Business View metric definitions, joins,
+  hierarchies and row-level security continue to apply. Any MCP-compatible client
+  (Claude Code, Claude Desktop, Cursor, or one you build) can connect.'
+status: published
+sources:
+- https://help.tellius.com/kaiya/tellius-mcp-server
+- https://help.tellius.com/kaiya/tellius-mcp-server/what-tellius-can-do-through-mcp
+- https://www.tellius.com/resources/blog/resources-whats-new-tellius-6-3
+- https://www.tellius.com/partners/snowflake
+
+deployment:
+  mode: remote
+  endpoint: https://{tellius-deployment-host}/mcp
+  install: null
+  package: null
+  auth: oauth
+  verified: probed
+
+transport:
+  primary: streamable HTTP
+  fallback: server-sent events
+  note: 'Docs: "The server speaks standard MCP over streamable HTTP... A server-sent
+    events transport is also available for older clients that need it, though HTTP is
+    preferred where a client supports both." No install step; nothing runs locally.'
+
+endpoint_note: 'The endpoint is tenant-specific. Tellius documents it as
+  https://<your-mcp-host>/mcp and tells the reader to "Ask your Tellius administrator
+  for your MCP endpoint URL. The host varies by deployment and ends in /mcp." No
+  single shared public MCP URL is published, so the endpoint recorded above is
+  templated rather than guessed.'
+
+x-evidence:
+  probed: '2026-08-30'
+  host: qa1.dev.tellius.com
+  host_provenance: 'A Tellius-operated deployment host that Tellius publishes in the
+    curl examples on its own Authentication API page. Used here only to confirm the
+    shape of the MCP surface every deployment serves.'
+  probes:
+  - url: https://qa1.dev.tellius.com/mcp
+    method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    http_status: 401
+    www_authenticate: 'Bearer resource_metadata="https://qa1.dev.tellius.com/.well-known/oauth-protected-resource"'
+    body: '{"error":"invalid_token","error_description":"Missing bearer token"}'
+    finding: 'The MCP endpoint is live and auth-gated, and it answers with a
+      spec-correct RFC 9728 challenge that points a client at the protected resource
+      metadata. Live tool schemas therefore require authenticated introspection; the
+      tool list below is transcribed from Tellius'' published reference, not from a
+      tools/list response.'
+  - url: https://qa1.dev.tellius.com/.well-known/oauth-protected-resource
+    http_status: 200
+    finding: 'resource https://qa1.dev.tellius.com/mcp, authorization_servers
+      [https://qa1.dev.tellius.com], scopes_supported [mcp]'
+  - url: https://qa1.dev.tellius.com/.well-known/oauth-authorization-server
+    http_status: 200
+    finding: 'Dynamic client registration, authorization_code + client_credentials +
+      refresh_token, PKCE S256'
+
+authentication:
+  model: oauth2
+  scopes:
+  - mcp
+  flows:
+  - name: browser sign-in
+    grant: authorization_code
+    pkce: S256
+    availability: all users
+    note: 'First connection opens a Tellius confirmation page in the browser; the
+      client then stores its credentials and reconnects without asking again. Needs
+      no administrator involvement, and each user''s own permissions apply.'
+  - name: client id and secret
+    grant: client_credentials
+    availability: administrators create the credentials under Admin Settings
+    note: 'For clients that cannot open a browser (the docs name Cursor).'
+  dynamic_client_registration: true
+  permissions: 'Every request runs as a specific Tellius user. Business View
+    permissions and row-level security are applied to that user, so an answer
+    retrieved through MCP reflects the same access the user has inside the product.'
+
+install:
+  claude_code: 'claude mcp add --transport http tellius https://<your-mcp-host>/mcp'
+  claude_desktop: 'Add a custom connector in client settings and paste the MCP URL;
+    the client opens a browser window for sign-in the first time.'
+  headless_clients: 'Use the administrator-issued client id and secret alongside the
+    MCP URL.'
+
+surface_counts:
+  tools: 25
+  resources: 6
+  prompts: 3
+  note: 'Counts are Tellius'' own, from the Quick reference table on
+    /kaiya/tellius-mcp-server/what-tellius-can-do-through-mcp. All 25 tools, 6
+    resources and 3 prompts are itemised by name in that page''s tables and are
+    transcribed verbatim below. Input schemas are NOT published: only tellius_ask has
+    documented parameters, and the live schemas require authenticated introspection
+    against a deployment because tools/list is OAuth-gated.'
+
+tools:
+- name: tellius_list_business_views
+  category: discovery
+  access: read-only
+  description: Search and page through Business Views. The starting point for most work.
+- name: tellius_get_business_view_details
+  category: discovery
+  access: read-only
+  description: Full column schema, data types and sample values for one Business View.
+- name: tellius_list_datasets
+  category: discovery
+  access: read-only
+  description: Raw imported datasets, before they are modeled into a Business View.
+- name: tellius_list_connections
+  category: discovery
+  access: read-only
+  description: Configured data source connections.
+- name: tellius_ask
+  category: ask-and-analyze
+  access: read/write
+  description: Natural-language question answered as SQL and results.
+  parameters:
+  - name: question
+    description: The request in plain English, with filters written into the sentence.
+  - name: business_view_ids
+    description: A list containing the Business View id.
+  - name: include_raw
+    description: Set true to receive the data table and the generated SQL alongside
+      the written answer. Required to read an exact value or validate the result.
+  response_shape:
+    summary: A sentence answering the question.
+    data: '{ columns: [...], rows: [[...]] }'
+    sql: The query Tellius generated and ran.
+  note: 'Each question asked through tellius_ask is saved as a conversation turn in
+    Tellius and stays visible in the Kaiya interface, which keeps external activity
+    auditable alongside in-product usage.'
+- name: tellius_deep_insight
+  category: ask-and-analyze
+  access: read/write
+  description: Multi-step agentic investigation for "why" questions.
+  note: 'Plans, runs several steps and validates its own findings; a call can run for
+    a few minutes on a large Business View. Docs advise a generous client timeout and
+    queueing rather than firing many in parallel.'
+- name: tellius_get_starter_questions
+  category: ask-and-analyze
+  access: read-only
+  description: Suggested questions for a Business View.
+- name: tellius_send_feedback
+  category: ask-and-analyze
+  access: read/write
+  description: Record a thumbs up or down on a previous Kaiya response.
+- name: tellius_list_workflows
+  category: workflows
+  access: read-only
+  description: Paginated list of workflows and Kaiya Missions.
+- name: tellius_search_workflows
+  category: workflows
+  access: read-only
+  description: Search workflows by name or description.
+- name: tellius_get_workflow
+  category: workflows
+  access: read-only
+  description: Full step detail for one workflow or Mission.
+- name: tellius_create_workflow
+  category: workflows
+  access: read/write
+  description: Author a new reusable multi-step workflow.
+- name: tellius_update_workflow
+  category: workflows
+  access: read/write
+  description: Change the name, steps, state or Business Views.
+- name: tellius_delete_workflow
+  category: workflows
+  access: destructive
+  description: Permanent delete.
+- name: tellius_run_workflow
+  category: workflows
+  access: read/write
+  description: Execute a workflow headlessly. May pause for input before starting.
+- name: tellius_resume_workflow
+  category: workflows
+  access: read/write
+  description: Continue a run that paused mid-execution, using its conversation_id.
+- name: tellius_create_schedule
+  category: schedules
+  access: read/write
+  description: Recurring delivery of a saved workflow or an ad-hoc question.
+- name: tellius_list_schedules
+  category: schedules
+  access: read-only
+  description: Schedules belonging to the calling user.
+- name: tellius_get_schedule
+  category: schedules
+  access: read-only
+  description: Full delivery configuration for one schedule.
+- name: tellius_update_schedule
+  category: schedules
+  access: read/write
+  description: Pause, resume, or change cadence and delivery channels.
+- name: tellius_delete_schedule
+  category: schedules
+  access: destructive
+  description: Permanent delete.
+- name: tellius_list_slack_channels
+  category: channels
+  access: read-only
+  description: Channel ids for Slack delivery on a schedule.
+- name: tellius_list_teams_channels
+  category: channels
+  access: read-only
+  description: Channel and team ids for Teams delivery on a schedule.
+- name: tellius_remember_user_preference
+  category: memory
+  access: read/write
+  description: Save a memory (a rule, a definition or an instruction) that later
+    turns will recall.
+- name: tellius_list_user_memories
+  category: memory
+  access: read-only
+  description: Review saved memories.
+
+resources:
+- uri: tellius://business-views
+  description: Live list of Business Views.
+- uri: tellius://business-views/{id}/schema
+  description: Column schema for one Business View.
+- uri: tellius://datasets/{id}/schema
+  description: Column schema for one dataset.
+- uri: tellius://guides/tellius-capabilities
+  description: What Kaiya can and cannot do.
+- uri: tellius://guides/business-view-modeling
+  description: Joins, column types and modeling guidance.
+- uri: tellius://guides/workflow-design
+  description: How to write effective workflow steps.
+
+prompts:
+- name: tellius_setup_data
+  description: Connection, then dataset, then Business View, then a first query.
+- name: tellius_analyze
+  description: Discover data, explore the schema, then analyze.
+- name: tellius_build_workflow
+  description: Clarify the goal, draft the steps, create the workflow, then test it.
+
+data_handling:
+  llm_involvement: 'The MCP server itself does not use a language model. tellius_ask
+    uses one to interpret the question and generate the query; tellius_list_business_views
+    does not. The administrator configures which model Kaiya uses under Settings →
+    Application Settings.'
+  what_the_model_receives: 'Business View schema (so it can write the query) and query
+    results (so it can summarize or build a report). Underlying row-level data does
+    not leave the environment.'
+  conversation_history: 'Questions asked through MCP are saved as conversation turns in
+    Tellius and remain available in the Kaiya interface.'

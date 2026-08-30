@@ -1,0 +1,189 @@
+generated: '2026-08-30'
+method: probed
+source: 'https://qa1.dev.tellius.com/.well-known/oauth-authorization-server (HTTP 200,
+  2026-08-30), https://qa1.dev.tellius.com/.well-known/oauth-protected-resource (HTTP
+  200), plus the Tellius security and API documentation'
+name: Tellius standards conformance
+note: 'Each entry records whether Tellius conforms and what the evidence is. Entries
+  marked probed were observed on the wire; entries marked searched come from Tellius''
+  own documentation or announcements.'
+
+standards:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749)
+  conforms: true
+  method: probed
+  evidence: 'Authorization server metadata declares grant_types_supported
+    [client_credentials, authorization_code, refresh_token] and response_types_supported
+    [code]. The ML Model API documents the client_credentials and refresh_token flows
+    with form-encoded requests and a standard token response.'
+  source: https://qa1.dev.tellius.com/.well-known/oauth-authorization-server
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: true
+  method: probed
+  evidence: '/.well-known/oauth-authorization-server returns 200 with issuer,
+    token_endpoint, authorization_endpoint, registration_endpoint,
+    grant_types_supported, response_types_supported, code_challenge_methods_supported,
+    token_endpoint_auth_methods_supported and scopes_supported.'
+  source: https://qa1.dev.tellius.com/.well-known/oauth-authorization-server
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata (RFC 9728)
+  conforms: true
+  method: probed
+  evidence: '/.well-known/oauth-protected-resource returns 200 with resource,
+    authorization_servers and scopes_supported; and an unauthenticated POST to /mcp
+    returns 401 with WWW-Authenticate: Bearer resource_metadata="..." pointing at that
+    document. This is the complete discovery loop, correctly implemented.'
+  source: https://qa1.dev.tellius.com/.well-known/oauth-protected-resource
+- id: rfc7591
+  name: OAuth 2.0 Dynamic Client Registration (RFC 7591)
+  conforms: true
+  method: probed
+  evidence: 'registration_endpoint https://{host}/oauth/register is advertised in the
+    authorization server metadata, so an MCP client can register itself without an
+    administrator.'
+  source: https://qa1.dev.tellius.com/.well-known/oauth-authorization-server
+- id: rfc7636
+  name: PKCE (RFC 7636)
+  conforms: true
+  method: probed
+  evidence: 'code_challenge_methods_supported: [S256].'
+  source: https://qa1.dev.tellius.com/.well-known/oauth-authorization-server
+- id: rfc6750
+  name: OAuth 2.0 Bearer Token Usage (RFC 6750)
+  conforms: true
+  method: probed
+  evidence: 'Bearer tokens in the Authorization header; 401 responses carry an
+    error/error_description body and a WWW-Authenticate challenge.'
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  method: searched
+  evidence: 'Tellius ships a hosted MCP server inside each deployment, speaking MCP
+    over streamable HTTP with an SSE fallback, publishing 25 tools, 6 resources and 3
+    prompts. Confirmed live (auth-gated) by a tools/list probe.'
+  source: https://help.tellius.com/kaiya/tellius-mcp-server
+- id: oidc
+  name: OpenID Connect
+  conforms: true
+  scope: end-user sign-in only
+  method: searched
+  evidence: 'OIDC is a supported SSO method for platform sign-in (Okta, Google, Azure
+    AD named in the docs). Note this is inbound identity, NOT an OIDC provider
+    surface: /.well-known/openid-configuration is not served anonymously (401).'
+  source: https://help.tellius.com/settings/security/sso-configuration/oidc
+- id: saml2
+  name: SAML 2.0
+  conforms: true
+  scope: end-user sign-in only
+  method: searched
+  evidence: 'SAML 2.0 SSO with Okta, Azure AD and OneLogin, including automatic user
+    provisioning.'
+  source: https://help.tellius.com/settings/security/sso-configuration/saml
+- id: ldap
+  name: LDAP
+  conforms: true
+  scope: end-user sign-in only
+  method: searched
+  evidence: 'LDAP authentication with server details, attribute mappings, TLS and role
+    mapping.'
+  source: https://help.tellius.com/settings/security/sso-configuration/ldap
+- id: soc2
+  name: SOC 2 Type II
+  conforms: true
+  method: searched
+  evidence: 'Tellius announced SOC 2 Type II certification following a third-party
+    audit. This is the only named certification Tellius publishes; there is no trust
+    center page and no certification portal.'
+  source: https://www.tellius.com/resources/blog/tellius-announces-soc-2-type-ii-certification
+- id: scim
+  name: SCIM
+  conforms: false
+  method: searched
+  evidence: 'No SCIM endpoint or urn:ietf:params:scim schema reference appears in the
+    documentation. User provisioning is done through SAML/OIDC auto-provisioning
+    instead.'
+- id: rfc9457
+  name: Problem Details for HTTP APIs (RFC 9457)
+  conforms: false
+  method: probed
+  evidence: 'Error bodies are {"message": "..."} on the platform surface. No
+    application/problem+json anywhere.'
+- id: rfc9116
+  name: security.txt (RFC 9116)
+  conforms: false
+  method: probed
+  evidence: '/.well-known/security.txt returns 404 on www.tellius.com and
+    help.tellius.com.'
+- id: rfc9727
+  name: API Catalog (RFC 9727)
+  conforms: false
+  method: probed
+  evidence: '/.well-known/api-catalog returns 404 on www.tellius.com.'
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  method: probed
+  evidence: 'No OpenAPI or Swagger definition is published. Probed /openapi.json,
+    /openapi.yaml, /swagger.json, /api-docs and /v3/api-docs on www.tellius.com,
+    help.tellius.com and the deployment hosts named in Tellius own docs. The REST
+    reference is GitBook prose.'
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  method: probed
+  evidence: 'Tellius runs a real WebSocket event surface (Search queries and job
+    notifications) but publishes no AsyncAPI document for it. See
+    asyncapi/tellius-search-asyncapi.yml, which is derived from the documentation
+    rather than published by Tellius.'
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  method: probed
+  evidence: '/.well-known/agent-card.json and /.well-known/agent.json both 404 on
+    www.tellius.com; the deployment host answers 401 on both.'
+- id: rate-limit-headers
+  name: RateLimit header fields (draft-ietf-httpapi-ratelimit-headers)
+  conforms: false
+  method: searched
+  evidence: 'No rate-limit headers are documented or observed.'
+- id: idempotency
+  name: Idempotency-Key
+  conforms: false
+  method: searched
+  evidence: 'Zero occurrences of "idempoten" across the full 565 KB Tellius
+    documentation index.'
+- id: dnssec
+  name: DNSSEC
+  conforms: false
+  method: probed
+  evidence: 'tellius.com is not DNSSEC signed. See security/tellius-domain-security.yml.'
+- id: hsts
+  name: HTTP Strict Transport Security
+  conforms: true
+  method: probed
+  evidence: 'max-age=31536000 on www.tellius.com and help.tellius.com; the deployment
+    host adds includeSubDomains and preload.'
+
+domain_standard:
+  market: analytics and business intelligence
+  declared: false
+  note: 'REWARD-ONLY, and nothing is claimed here. The analytics/BI market has no
+    single contract-declared interchange standard of the kind SCIM, OData, OpenRTB,
+    HL7v2 or OAI-PMH provide in their sectors, and Tellius declares none in any
+    contract. Tellius does integrate with vertical data providers (IQVIA, Symphony
+    Health, Veeva CRM, MMIT, NielsenIQ, Circana) and reads Snowflake Semantic Views,
+    but these are vendor integrations, not a declared domain standard, so no
+    conformance is asserted. The nearest thing to a domain standard Tellius DOES
+    declare is MCP itself, recorded above.'
+  candidates_probed:
+  - id: odata
+    found: false
+    note: 'No $metadata surface; no OData query grammar in the documented endpoints.'
+  - id: xmla
+    found: false
+    note: 'No XMLA/MDX endpoint documented, despite the BI category.'
+  - id: dcat
+    found: false
+    note: 'No data catalog vocabulary exposed.'

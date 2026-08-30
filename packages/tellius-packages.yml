@@ -1,0 +1,137 @@
+generated: '2026-08-30'
+method: searched
+source: 'registry.npmjs.org search, pypi.org/pypi/*/json, api.github.com/orgs/Tellius,
+  and the Tellius API documentation at https://help.tellius.com/api'
+name: Tellius packages
+note: 'Tellius publishes NO client SDK for its own API in any language. Searched npm
+  (registry search "tellius"), PyPI (tellius, tellius-sdk, pytellius all 404), and the
+  full Tellius documentation index for an SDK, client library or code-sample section —
+  every API page shows raw curl. The MCP docs state the position explicitly: "No
+  custom protocol, plugin, or Tellius SDK is required." What the Tellius GitHub org
+  publishes instead is data-engine plumbing: one first-party Python package and a set
+  of Spark connector forks carrying Tellius'' own fixes.'
+
+official_sdk_count: 0
+official_sdk_note: 'Zero first-party API client libraries. An integrator writes HTTP
+  by hand, or connects an off-the-shelf MCP client to the MCP endpoint.'
+
+packages:
+- name: tellius-data-manager
+  official: true
+  registry: pypi
+  url: https://pypi.org/project/tellius-data-manager/
+  repository: https://github.com/Tellius/tellius-data-manager
+  language: Python
+  version: 0.2.57
+  published: '2022-10-11'
+  license: Apache-2.0
+  kind: data-engine tooling
+  first_party_evidence: 'Published under the Tellius GitHub org; PyPI author is
+    "Tellius Open Source <tellius.open.source@tellius.com>".'
+  note: 'NOT an API client. Latest release 0.2.57 (2022-10-11); the repository was
+    last pushed 2022-11-11. Four years without a release, spanning platform releases
+    5.4 through 6.3 — including the entire Kaiya and MCP era. Treat as dormant.'
+- name: spark-excel
+  official: true
+  registry: github
+  url: https://github.com/Tellius/spark-excel
+  language: Scala
+  version: null
+  published: null
+  version_note: 'No published release or tag on the fork and no artifact on Maven
+    Central under a Tellius coordinate; a consumer would build from source at a commit.
+    Last push 2023-01-02.'
+  license: Apache-2.0
+  fork: true
+  kind: Spark connector fork
+  note: '"Spark Excel Connector, Tellius Cloned version with bug fixes and
+    enhancements."'
+- name: clickhouse-spark-connector
+  official: true
+  registry: github
+  url: https://github.com/Tellius/clickhouse-spark-connector
+  language: Scala
+  version: null
+  published: null
+  version_note: 'No release, no tag, no registry artifact. Last push 2024-11-18 —
+    the most recently touched code in the Tellius org after their Spark and Airbyte
+    forks.'
+  fork: true
+  kind: Spark connector fork
+  note: '"Spark Clickhouse connector - Tellius Cloned version with feature
+    enhancements."'
+- name: spark-redshift
+  official: true
+  registry: github
+  url: https://github.com/Tellius/spark-redshift
+  version: null
+  published: null
+  version_note: 'Fork, no release; last push 2023-10-21.'
+  fork: true
+  kind: Spark connector fork
+- name: spark-sftp
+  official: true
+  registry: github
+  url: https://github.com/Tellius/spark-sftp
+  language: Scala
+  version: null
+  published: null
+  version_note: 'Fork, no release; last push 2022-12-30.'
+  fork: true
+  kind: Spark connector fork
+- name: spark-bigquery
+  official: true
+  registry: github
+  url: https://github.com/Tellius/spark-bigquery
+  language: Scala
+  version: null
+  published: null
+  version_note: 'Fork, no release; last push 2023-01-02.'
+  fork: true
+  kind: Spark connector fork
+- name: spark-stemming
+  official: true
+  registry: github
+  url: https://github.com/Tellius/spark-stemming
+  language: Java
+  version: null
+  published: null
+  version_note: 'Fork, no release; last push 2023-02-14.'
+  fork: true
+  kind: Spark MLlib wrapper for the Snowball framework
+- name: presto
+  official: true
+  registry: github
+  url: https://github.com/Tellius/presto
+  version: null
+  published: null
+  version_note: 'Fork, no release; last push 2022-05-05.'
+  fork: true
+  kind: 'Fork of Presto DB with a fix for decimal types in the JDBC driver.'
+
+third_party:
+- name: tellius-timeslice
+  official: false
+  registry: npm
+  url: https://www.npmjs.com/package/tellius-timeslice
+  version: 1.0.3
+  published: '2022-06-09'
+  note: 'Named "tellius" but NOT a Tellius package: it is a React time-slice plugin
+    published from a personal GitHub account (gbgaurav), unrelated to the Tellius
+    platform. Recorded here so a later pass does not mistake it for a first-party SDK.'
+
+registries_searched:
+- registry: npm
+  query: tellius
+  first_party_hits: 0
+- registry: pypi
+  queried:
+  - tellius (404)
+  - tellius-sdk (404)
+  - pytellius (404)
+  - tellius-data-manager (200)
+  first_party_hits: 1
+- registry: github
+  org: https://github.com/Tellius
+  public_repos: 12
+  first_party_hits: 8

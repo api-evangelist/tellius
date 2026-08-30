@@ -1,0 +1,123 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/api/authentication-api-login-api
+docs:
+- https://help.tellius.com/api/authentication-api-login-api
+- https://help.tellius.com/api/ml-model-apis
+- https://help.tellius.com/kaiya/tellius-mcp-server
+- https://help.tellius.com/settings/security/authentication
+- https://help.tellius.com/settings/security/sso-configuration
+name: Tellius authentication profile
+note: 'Derived from Tellius'' published API and security documentation plus a live
+  probe of a Tellius deployment''s OAuth metadata. There is no OpenAPI definition, so
+  no securitySchemes block exists to derive from; derive-authentication.py had no
+  spec to read.'
+
+schemes:
+- id: telliusJwt
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  applies_to: Insights APIs, Search APIs, and the wider backend REST surface
+  issuance:
+    operation: 'POST https://{tellius-deployment-host}/api/auth/login'
+    content_type: application/json
+    request: '{"username": "...", "password": "..."}'
+    response: '{"id": "<uuid>", "message": "Login successful", "token": "<jwt>"}'
+    required_headers:
+    - name: csrf
+      note: 'Docs: "Make sure the csrf header is passed (usually found in the page
+        source when you are logged into Tellius)." No programmatic way to obtain the
+        CSRF value is documented, which is the single largest friction point for a
+        headless integrator on this surface.'
+  usage: 'Authorization: Bearer <token> on each call. The Insights API examples show
+    the token sent as a bare Authorization value without the Bearer prefix; the docs
+    are inconsistent here.'
+  expiry: 'Documented only as a "temporary access token". No lifetime, no refresh
+    operation is published for this scheme.'
+- id: telliusSession
+  type: cookie
+  applies_to: browser-based applications
+  issuance: 'POST /api/auth/login with "session": true in the body.'
+  note: 'Tellius creates a server-side session and manages authentication via cookies;
+    no Authorization header is then needed. Recommended by the docs for browser apps.'
+- id: telliusOAuthClientCredentials
+  type: oauth2
+  flow: clientCredentials
+  applies_to: ML Model APIs (/proxy/ml/external/*)
+  token_endpoint: 'POST https://{tellius-deployment-host}/oauth/client_credentials_token'
+  content_type: application/x-www-form-urlencoded
+  parameters:
+  - client_id
+  - client_secret
+  - grant_type (must be client_credentials)
+  response: '{"access_token": "...", "refresh_token": "...", "token_type": "bearer"}'
+  refresh:
+    endpoint: 'POST https://{tellius-deployment-host}/oauth/refresh_token'
+    parameters:
+    - refresh_token
+    - secret
+    - grant_type (must be refresh_token)
+  scopes: []
+  scopes_note: 'No scope parameter is documented for this flow.'
+- id: telliusMcpOAuth
+  type: oauth2
+  flows:
+  - authorizationCode
+  - clientCredentials
+  applies_to: the Tellius MCP server at /mcp
+  pkce: S256
+  scopes:
+  - mcp
+  authorization_endpoint: https://{tellius-deployment-host}/oauth/authorize
+  token_endpoint: https://{tellius-deployment-host}/oauth/token
+  registration_endpoint: https://{tellius-deployment-host}/oauth/register
+  dynamic_client_registration: true
+  discovery:
+    authorization_server_metadata: /.well-known/oauth-authorization-server
+    protected_resource_metadata: /.well-known/oauth-protected-resource
+    standards:
+    - RFC 8414
+    - RFC 9728
+    - RFC 7591
+    - RFC 7636
+  method: probed
+  probe:
+    url: https://qa1.dev.tellius.com/mcp
+    http_status: 401
+    www_authenticate: 'Bearer resource_metadata="https://qa1.dev.tellius.com/.well-known/oauth-protected-resource"'
+    date: '2026-08-30'
+  note: 'This is the strongest auth surface Tellius ships and the only one that is
+    fully machine-discoverable. Browser sign-in needs no administrator; client
+    id/secret credentials are created by an administrator under Admin Settings for
+    headless clients.'
+
+end_user_authentication:
+  note: 'Platform sign-in, distinct from API credentials. Configured under Settings →
+    Security.'
+  methods:
+  - Default (local Tellius accounts)
+  - LDAP
+  - SAML 2.0 (Okta, Azure AD, OneLogin named in the docs, with auto-provisioning)
+  - OIDC (Okta, Google, Azure AD named)
+  - Azure AD
+  docs: https://help.tellius.com/settings/security/sso-configuration
+
+embedded_authentication:
+  note: 'Embedded Vizpads, Insights, Search, Assistant, Kaiya and Feeds authenticate
+    through the embedding URL plus postMessage, with row-level policy filters applied
+    per userId token.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url
+
+authorization:
+  model: 'User-scoped. Every API and MCP request runs as a specific Tellius user;
+    Business View permissions, security tags, groups and row-level security policies
+    determine what that user can read.'
+  docs: https://help.tellius.com/settings/users-and-access/security-tags
+
+gaps:
+- 'No public token-lifetime, rotation or revocation policy for the JWT login scheme.'
+- 'The csrf header requirement on /api/auth/login is documented as something you find
+  in page source, with no headless path stated.'
+- 'A single "mcp" scope covers every MCP tool including the destructive ones.'
+- 'No API-key scheme is offered for server-to-server REST use outside the ML endpoints.'

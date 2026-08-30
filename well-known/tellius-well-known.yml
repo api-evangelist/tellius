@@ -1,0 +1,85 @@
+generated: '2026-08-30'
+method: probed
+source: 'Direct HTTP probes of /.well-known/* on every Tellius host known from apis.yml
+  and from the Tellius API documentation, 2026-08-30.'
+name: Tellius well-known documents
+note: 'Tellius ships as a per-customer Kubernetes deployment, so there is no single
+  shared production API host to probe. The marketing host (www.tellius.com) and the
+  GitBook docs host (help.tellius.com) serve nothing under /.well-known/. A Tellius
+  DEPLOYMENT host does: qa1.dev.tellius.com — the host Tellius itself uses in the
+  curl examples on its own Authentication API page — serves a real RFC 8414 OAuth
+  authorization server metadata document and a real RFC 9728 protected resource
+  metadata document, both anonymously. That host is a Tellius-operated QA deployment,
+  not a customer production base; it is recorded here because it is the only publicly
+  reachable instance of the well-known surface every Tellius deployment serves, and
+  because Tellius published its hostname in its own public documentation.'
+hosts:
+- host: www.tellius.com
+  role: marketing website
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: help.tellius.com
+  role: documentation host (GitBook)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+- host: qa1.dev.tellius.com
+  role: Tellius-operated deployment host, named in Tellius' own API documentation
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: well-known/tellius-oauth-authorization-server.json
+    content_type: application/json; charset=utf-8
+    summary: 'RFC 8414 authorization server metadata. issuer https://qa1.dev.tellius.com;
+      token, authorization and dynamic client registration endpoints under /oauth/;
+      grant types client_credentials, authorization_code, refresh_token; PKCE S256;
+      token endpoint auth methods none and client_secret_post; scopes_supported: [mcp].'
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: well-known/tellius-oauth-protected-resource.json
+    content_type: application/json; charset=utf-8
+    summary: 'RFC 9728 protected resource metadata. resource https://qa1.dev.tellius.com/mcp;
+      authorization_servers [https://qa1.dev.tellius.com]; scopes_supported [mcp].'
+  - path: /.well-known/openid-configuration
+    status: 401
+    file: null
+  - path: /.well-known/security.txt
+    status: 401
+    file: null
+  - path: /.well-known/api-catalog
+    status: 401
+    file: null
+  - path: /.well-known/agent.json
+    status: 401
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 401
+    file: null
+findings:
+- 'No security.txt (RFC 9116) is published on any Tellius host.'
+- 'No /.well-known/api-catalog (RFC 9727) is published.'
+- 'No A2A agent card is published at either the current or the legacy well-known path.'
+- 'The two documents that ARE served are the pair an MCP client needs to complete an
+  OAuth flow against a Tellius deployment, and they are served anonymously — the MCP
+  endpoint itself is gated.'

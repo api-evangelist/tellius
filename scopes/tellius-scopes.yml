@@ -1,0 +1,50 @@
+generated: '2026-08-30'
+method: probed
+source: https://qa1.dev.tellius.com/.well-known/oauth-authorization-server
+docs: https://help.tellius.com/kaiya/tellius-mcp-server
+name: Tellius OAuth scopes
+note: 'Read from the RFC 8414 authorization server metadata a Tellius deployment
+  serves anonymously, probed 2026-08-30 (HTTP 200). Tellius publishes no scope
+  reference page and no OpenAPI securitySchemes, so this metadata document is the
+  only machine-readable statement of the scope surface. It declares exactly ONE
+  scope. The derive-oauth-scopes.py baseline was not runnable here because there is
+  no OpenAPI in the repo to derive from.'
+authorization_server: https://{tellius-deployment-host}
+endpoints:
+  authorization: https://{tellius-deployment-host}/oauth/authorize
+  token: https://{tellius-deployment-host}/oauth/token
+  registration: https://{tellius-deployment-host}/oauth/register
+  client_credentials_token: https://{tellius-deployment-host}/oauth/client_credentials_token
+  refresh_token: https://{tellius-deployment-host}/oauth/refresh_token
+grant_types_supported:
+- client_credentials
+- authorization_code
+- refresh_token
+response_types_supported:
+- code
+code_challenge_methods_supported:
+- S256
+token_endpoint_auth_methods_supported:
+- none
+- client_secret_post
+dynamic_client_registration: true
+scope_count: 1
+scopes:
+- scope: mcp
+  description: 'Access to the Tellius MCP server at /mcp. Declared in both the
+    authorization server metadata (scopes_supported) and the RFC 9728 protected
+    resource metadata for the resource https://{tellius-deployment-host}/mcp.'
+  resource: https://{tellius-deployment-host}/mcp
+  method: probed
+  source: https://qa1.dev.tellius.com/.well-known/oauth-protected-resource
+findings:
+- 'Tellius does NOT decompose MCP access into per-capability scopes. A single "mcp"
+  scope covers all 25 tools, including the two the docs themselves mark Destructive
+  (tellius_delete_workflow, tellius_delete_schedule). An agent granted the scope to
+  ask a question is granted the scope to permanently delete a schedule.'
+- 'Authorization is instead enforced downstream: every MCP request runs as a specific
+  Tellius user, and Business View permissions plus row-level security apply to that
+  user. That is real governance, but it is user-level, not token-level — the token
+  itself carries no least-privilege boundary.'
+- 'The ML Model REST endpoints use OAuth2 client_credentials with no scope parameter
+  documented at all.'

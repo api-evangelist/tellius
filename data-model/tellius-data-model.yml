@@ -1,0 +1,232 @@
+generated: '2026-08-30'
+method: derived
+source: 'https://help.tellius.com/api (Insights, Search, ML Model API pages) +
+  https://help.tellius.com/kaiya/tellius-mcp-server/what-tellius-can-do-through-mcp
+  (tool and resource surface) + https://help.tellius.com/settings'
+name: Tellius data model
+note: 'DERIVED FROM DOCUMENTATION, NOT FROM A SPEC. Tellius publishes no OpenAPI and
+  no schema reference, so this entity graph is reconstructed from the identifiers,
+  parameters and payloads that appear in the published API examples and from the MCP
+  tool/resource surface. Field lists are therefore partial: only fields Tellius
+  actually shows are recorded. Nothing has been inferred into existence.'
+
+id_conventions:
+- entity: BusinessView
+  prefix: 'bv_'
+  example: bv_c97bee81-4743-47a2-95e8-837946757617
+  form: 'prefix + UUID'
+  source: https://help.tellius.com/api/search-apis
+- entity: Insight
+  prefix: 'insight_'
+  example: insight_1e2a
+  source: https://help.tellius.com/api/insights-apis
+- entity: Driver
+  prefix: 'driver_'
+  example: driver_c9d9
+  source: https://help.tellius.com/api/insights-apis
+- entity: PredictedData
+  prefix: 'externalPredict_'
+  example: externalPredict_9c09cc3c-f670-4839-9ec6-7b778a68
+  source: https://help.tellius.com/api/ml-model-apis
+- entity: Job
+  prefix: none
+  example: 0096d8db-e1ad-41e9-a7c9-b9c8fa338e39
+  form: bare UUID
+- entity: User
+  prefix: none
+  example: 18d60756-712e-4867-a301-430ba7f58880
+  form: bare UUID
+note_on_ids: 'Tellius is inconsistent: some ids are prefixed and typed (bv_, insight_,
+  driver_, externalPredict_), others are bare UUIDs (user, job). The MCP docs make a
+  point of the stability guarantee for one of them — "Always send the business_view_id
+  rather than the Business View name. Names can be edited; ids are stable."'
+
+entities:
+- name: Connection
+  description: 'A configured data source connection (Snowflake, Databricks, BigQuery,
+    Redshift, S3, SFTP, Trino, ClickHouse, MongoDB and others).'
+  discoverable_via: tellius_list_connections
+- name: Dataset
+  description: 'A raw imported dataset, before it is modeled into a Business View.'
+  discoverable_via: tellius_list_datasets
+  schema_resource: tellius://datasets/{id}/schema
+- name: BusinessView
+  description: 'The governed semantic model: joined datasets with metric definitions,
+    column types, hierarchies and row-level security. The unit of access control and
+    the unit every question is asked against.'
+  discoverable_via: tellius_list_business_views
+  detail_via: tellius_get_business_view_details
+  schema_resource: tellius://business-views/{id}/schema
+  fields_documented:
+  - business_view_id
+  - column schema (names, data types, sample values)
+- name: Insight
+  description: 'An automated analysis artifact — segment discovery, trend or cohort —
+    produced by the Insights engine.'
+  fields_documented:
+  - insightId
+  - driverId
+  - driverName
+  - label
+  - labelType (categorical | continuous)
+  - sourceid (the Business View id)
+  - createdBy
+  - consumed
+  - options (featureselection_featurenames, featureselection_includefeaturenames,
+    targetLabel, treeDepth, sample, createStage)
+  operations:
+  - 'GET /insight'
+  - 'DELETE /insight/{insightId}'
+  - 'PUT /insight/{insightId} (mark consumed)'
+- name: Driver
+  description: 'A driver analysis attached to an Insight. insightId + driverId together
+    address the Insight in the UI at /discover/insight/{insightId}/{driverId}.'
+- name: Vizpad
+  description: 'An interactive dashboard of Vizzes, with tabs, filters (local, global,
+    timeline, resolution), custom views and export.'
+- name: Viz
+  description: 'A single chart or table on a Vizpad.'
+- name: SearchQuery
+  description: 'A natural-language query executed against a Business View over the
+    Search WebSocket, correlated by corrId.'
+  fields_documented:
+  - nlpQuery
+  - businessViewId
+  - corrId
+  - performQuery
+  - enterKeyPress
+  - createViz
+  - timezone
+  - aggregatedField (response)
+  - tokenString (response)
+- name: Workflow
+  description: 'A reusable multi-step workflow. A Kaiya Mission is a workflow that
+    pursues an objective continuously.'
+  discoverable_via: tellius_list_workflows, tellius_search_workflows
+  detail_via: tellius_get_workflow
+- name: Schedule
+  description: 'Recurring delivery of a saved workflow or a stored ad-hoc question to
+    email, Slack or Teams.'
+  fields_documented:
+  - name
+  - cadence
+  - what to run (workflow or stored question)
+  - delivery channels
+  - enabled/disabled state (6.3.2)
+- name: MLModel
+  description: 'A trained AutoML model that can be called for prediction from outside
+    Tellius.'
+  fields_documented:
+  - modelId
+  operations:
+  - 'POST /proxy/ml/external/predict'
+  - 'POST /proxy/ml/external/predict/file'
+- name: PredictedData
+  description: 'The result set of a file-based prediction run.'
+  fields_documented:
+  - predictedDataId
+  operations:
+  - 'GET /proxy/ml/external/predict/download'
+  - 'GET /proxy/ml/external/predict/view'
+- name: Job
+  description: 'An asynchronous unit of work — Insight build, data pipeline, ML train
+    — reported over WebSocket and listed at /api/jobs/list.'
+  fields_documented:
+  - jobId
+  - jobType (e.g. SegmentDiscoveryInsight)
+  - status (SUCCESS | FAILURE)
+  - starttime
+  - timetaken
+  - createdBy
+  - consumed
+  - estimatedResourceSizeBytes
+- name: User
+  description: 'A Tellius account. Every API and MCP request runs as one.'
+- name: Group
+  description: 'A collection of users carrying roles and row-level security policies.'
+- name: SecurityTag
+  description: 'Platform-wide row-level permission mechanism (6.3.1) — defined once,
+    applied wherever a user asks a question: Kaiya conversation, Mission or App.'
+- name: Memory
+  description: 'A saved user preference — a rule, a definition or an instruction — that
+    later Kaiya turns recall (Business Memory).'
+  discoverable_via: tellius_list_user_memories
+- name: Conversation
+  description: 'A Kaiya thread. Every question asked over MCP is saved as a conversation
+    turn and stays visible in the Kaiya interface.'
+  fields_documented:
+  - conversation_id
+
+relationships:
+- from: Dataset
+  to: Connection
+  type: belongs_to
+  via: connection
+- from: BusinessView
+  to: Dataset
+  type: has_many
+  via: modeled from
+- from: Insight
+  to: BusinessView
+  type: belongs_to
+  via: sourceid
+- from: Insight
+  to: Driver
+  type: has_many
+  via: driverId
+- from: Insight
+  to: User
+  type: belongs_to
+  via: createdBy
+- from: SearchQuery
+  to: BusinessView
+  type: belongs_to
+  via: businessViewId
+- from: Vizpad
+  to: Viz
+  type: has_many
+- from: Viz
+  to: BusinessView
+  type: belongs_to
+- from: Workflow
+  to: BusinessView
+  type: has_many
+  via: 'workflow Business Views (tellius_update_workflow changes them)'
+- from: Schedule
+  to: Workflow
+  type: belongs_to
+  via: what to run
+- from: PredictedData
+  to: MLModel
+  type: belongs_to
+  via: modelId
+- from: Job
+  to: User
+  type: belongs_to
+  via: createdBy
+- from: Job
+  to: Insight
+  type: has_one
+  via: 'result.insightId on a SegmentDiscoveryInsight job'
+- from: Memory
+  to: User
+  type: belongs_to
+- from: Conversation
+  to: User
+  type: belongs_to
+- from: User
+  to: Group
+  type: has_many
+- from: Group
+  to: SecurityTag
+  type: has_many
+- from: BusinessView
+  to: SecurityTag
+  type: has_many
+  via: row-level permissions
+
+gaps:
+- 'No object reference page and no schema documentation exist, so field lists are
+  limited to what appears in example payloads.'
+- 'Vizpad, Viz, Group, User and SecurityTag have no documented API representation at
+  all — they are reachable only through the UI and the embedding surface.'

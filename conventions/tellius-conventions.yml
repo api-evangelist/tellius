@@ -1,0 +1,199 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/api
+docs:
+- https://help.tellius.com/api/authentication-api-login-api
+- https://help.tellius.com/api/insights-apis
+- https://help.tellius.com/api/search-apis
+- https://help.tellius.com/api/ml-model-apis
+- https://help.tellius.com/kaiya/tellius-mcp-server
+name: Tellius API conventions
+note: 'Cross-cutting runtime semantics, read from Tellius'' published API reference
+  and confirmed on the wire where possible. No OpenAPI exists to derive from.'
+
+auth_style:
+  summary: 'Bearer JWT from a login endpoint for the platform REST surface; cookie
+    session as an alternative for browser apps; OAuth2 client_credentials for the ML
+    endpoints; full OAuth 2.1 with PKCE and dynamic client registration for MCP.'
+  see: authentication/tellius-authentication.yml
+
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  evidence: 'No Idempotency-Key header, no idempotency section, and no retry-safety
+    statement appears anywhere in the Tellius API documentation. Searched the full
+    docs index (help.tellius.com/llms.txt, 565 KB) for "idempoten" — zero hits.'
+  consequence: 'The write surfaces that exist — POST /proxy/ml/external/predict,
+    Insight creation, tellius_create_workflow, tellius_create_schedule — carry no
+    documented deduplication guarantee, so an agent that retries a timed-out call may
+    create a second workflow, a second schedule, or a second prediction job.'
+
+pagination:
+  style: limit-offset
+  supported: true
+  parameters:
+  - name: limit
+    description: Number of records to return.
+  - name: offset
+    description: 'Zero-based starting position. Docs example: with 12 Insights and
+      limit=4, offset=0 returns the first four, offset=4 returns from the fourth.'
+  applies_to:
+  - 'GET /insight'
+  - 'GET /api/jobs/list'
+  - 'GET /proxy/ml/external/predict/view (uses nrows and rowoffset instead, default
+    nrows=200, rowoffset=0)'
+  response_fields:
+  - totalCount (Search WebSocket history response)
+  cursor_support: false
+  link_header: false
+  inconsistency: 'Three different parameter spellings across one API: limit/offset on
+    the Insights and jobs endpoints, nrows/rowoffset on the ML view endpoint, and
+    limit with an in-message totalCount on the Search WebSocket.'
+
+filtering:
+  supported: true
+  examples:
+  - 'GET /insight?includingShared=true&withSharings=true&onlyShared=true'
+  - 'GET /api/jobs/list?createdBy=superUser&type=Insight&includeConsumed=true&sortBy=createdAt'
+  note: 'Boolean query flags, not a general filter grammar.'
+
+field_expansion:
+  supported: false
+  note: 'No sparse-fieldsets or expand parameter is documented. withSharings=true on
+    the Insights endpoint is the closest thing: it inlines sharing records.'
+
+sorting:
+  supported: true
+  parameter: sortBy
+  applies_to:
+  - 'GET /api/jobs/list'
+
+metadata:
+  supported: false
+  note: 'No customer-defined metadata bag is documented on any resource.'
+
+request_id_tracing:
+  http: false
+  http_note: 'No X-Request-Id / correlation header is documented or observed on HTTP
+    responses.'
+  websocket: true
+  websocket_mechanism: corrId
+  websocket_note: 'The Search API is entirely WebSocket-based, and the caller
+    generates a corrId on every request. "Every Response will be matched with its
+    corresponding Request using corrId." Correlation is the client''s job, and it is
+    the only tracing primitive Tellius exposes.'
+  async_jobs: 'Job notifications carry jobId, jobType, status, starttime and timetaken.'
+
+versioning:
+  api_versioning: none
+  api_versioning_note: 'No version segment in any documented path, no version header,
+    no Accept media-type versioning. /api/auth/login, /insight, /proxy/ml/external/predict
+    are all unversioned. The API version is implicitly the version of the deployed
+    Tellius platform.'
+  product_versioning: 'Platform releases are MAJOR.MINOR with dotted patches
+    (6.3, 6.3.0.1, 6.3.0.2, 6.3.1, 6.3.2). Documentation is versioned alongside the
+    product: help.tellius.com carries 6.3 plus retained 6.2, 6.1, 6.0, 5.6, 5.5 and
+    5.4 trees.'
+  see: lifecycle/tellius-lifecycle.yml
+
+error_envelope:
+  shapes:
+  - '{"message": "<text>"}'
+  - '{"error": "<code>", "error_description": "<text>"} (MCP / OAuth only)'
+  rfc9457: false
+  see: errors/tellius-problem-types.yml
+
+rate_limit_signaling:
+  headers: []
+  documented: false
+  see: rate-limits/tellius-rate-limits.yml
+
+content_negotiation:
+  request:
+  - application/json
+  - application/x-www-form-urlencoded (OAuth token endpoints)
+  - multipart/form-data (ML file prediction)
+  response:
+  - application/json
+  - text/csv (ML prediction download)
+
+async_model:
+  summary: 'Long-running work does not block the HTTP call. Insight creation returns
+    immediately and reports completion over a WebSocket notification; ML file
+    prediction returns a predictedDataId that the caller then polls or downloads.
+    tellius_deep_insight over MCP is the exception — it holds the connection open for
+    minutes, and the docs tell clients to raise their timeout and queue rather than
+    parallelise.'
+
+reversibility:
+  state: not-documented
+  grade: none
+  read_only_api: false
+  summary: 'Tellius documents no reversal operation and no reversal window for any
+    write surface. Where it addresses the question at all, it does so to say the
+    opposite: the MCP reference marks tellius_delete_workflow and
+    tellius_delete_schedule with the access value "Destructive" and the description
+    "Permanent delete." No undo, restore, trash, archive, soft-delete or recovery
+    window is published anywhere in the documentation.'
+  write_surfaces:
+  - operation: tellius_delete_workflow
+    surface: mcp
+    reversal: none
+    window: null
+    evidence: 'Docs label it Destructive / "Permanent delete."'
+    source: https://help.tellius.com/kaiya/tellius-mcp-server/what-tellius-can-do-through-mcp
+  - operation: tellius_delete_schedule
+    surface: mcp
+    reversal: none
+    window: null
+    evidence: 'Docs label it Destructive / "Permanent delete."'
+    source: https://help.tellius.com/kaiya/tellius-mcp-server/what-tellius-can-do-through-mcp
+  - operation: 'DELETE /insight/{insightId}'
+    surface: rest
+    reversal: none
+    window: null
+    evidence: 'No restore operation is documented; the Insights API page documents
+      only GET, DELETE and PUT.'
+    source: https://help.tellius.com/api/insights-apis
+  - operation: tellius_update_schedule
+    surface: mcp
+    reversal: partial
+    window: null
+    evidence: 'A schedule can be paused and resumed, and 6.3.2 adds enable/disable
+      with "a disabled schedule is held from executing until it is enabled again."
+      That is a reversible state change rather than a reversal of a completed action,
+      and no window is stated.'
+    source: https://help.tellius.com/whats-new/release-6.3/patch-6.3.2
+  - operation: tellius_create_workflow / tellius_update_workflow
+    surface: mcp
+    reversal: none
+    window: null
+    evidence: 'No version history or rollback for workflow definitions is documented.'
+  - operation: 'POST /proxy/ml/external/predict'
+    surface: rest
+    reversal: na
+    window: null
+    evidence: 'Prediction is a computation, not a durable mutation; there is nothing
+      to take back.'
+  consequence: 'An agent operating Tellius through MCP can permanently destroy a
+    saved Mission or a delivery schedule and has no published means of getting it
+    back, and no published statement of how long it has to change its mind — because
+    the answer is zero. Agents should treat both delete tools as requiring explicit
+    human confirmation.'
+
+dry_run_mode:
+  supported: false
+  note: 'No dry-run, preview or validate-only parameter is documented on any write
+    operation. The Search WebSocket does offer a validation mode (enterKeyPress:false
+    validates and tokenizes a query without executing it), which is a rehearsal
+    primitive for reads only.'
+
+cross_links:
+  errors: errors/tellius-problem-types.yml
+  lifecycle: lifecycle/tellius-lifecycle.yml
+  authentication: authentication/tellius-authentication.yml
+  scopes: scopes/tellius-scopes.yml
+  rate_limits: rate-limits/tellius-rate-limits.yml
+  mcp: mcp/tellius-mcp.yml

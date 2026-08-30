@@ -1,0 +1,94 @@
+generated: '2026-08-30'
+method: probed
+source: 'Live probes of a Tellius deployment host (qa1.dev.tellius.com, the host
+  Tellius publishes in its own Authentication API curl examples), 2026-08-30, plus
+  the documented response shapes at https://help.tellius.com/api'
+name: Tellius error catalog
+format: proprietary
+rfc9457: false
+note: 'Tellius publishes NO error-code reference and NO error catalog page, and there
+  is no OpenAPI definition to derive 4xx/5xx responses from. What is recorded below
+  is (a) the two error envelopes actually observed on the wire and (b) the failure
+  shapes the documentation itself shows. This is a genuine gap, not an omission of
+  this pass: an agent integrating Tellius cannot enumerate the errors it must handle
+  from anything Tellius publishes.'
+
+envelopes:
+- id: platform-message-envelope
+  shape: '{"message": "<text>"}'
+  media_type: application/json
+  method: probed
+  evidence:
+    url: https://qa1.dev.tellius.com/openapi.json
+    http_status: 401
+    body: '{"message":"Unauthorized"}'
+    observed: '2026-08-30'
+  note: 'The general Tellius platform envelope. A single human-readable string, no
+    machine-readable code, no type URI, no correlation id.'
+- id: oauth-error-envelope
+  shape: '{"error": "<code>", "error_description": "<text>"}'
+  media_type: application/json
+  method: probed
+  evidence:
+    url: https://qa1.dev.tellius.com/mcp
+    http_status: 401
+    body: '{"error":"invalid_token","error_description":"Missing bearer token"}'
+    www_authenticate: 'Bearer resource_metadata="https://qa1.dev.tellius.com/.well-known/oauth-protected-resource"'
+    observed: '2026-08-30'
+  note: 'RFC 6750 / RFC 9728 shaped, used by the MCP endpoint. This is the only error
+    surface on Tellius that a client can react to programmatically, because the code
+    is a stable token and the WWW-Authenticate header names the recovery path.'
+- id: websocket-job-envelope
+  shape: '{"request": {...}, "result": {...}, "status": "SUCCESS|FAILURE", "jobId": "<uuid>", "jobType": "<type>", "timetaken": "<duration>", "createdBy": "<user>"}'
+  media_type: application/json (over WebSocket)
+  method: searched
+  source: https://help.tellius.com/api/insights-apis
+  note: 'Insight creation succeeds or fails asynchronously and reports through a
+    WebSocket notification rather than an HTTP status. status is SUCCESS or FAILURE;
+    the docs show both shapes. A client that only reads the HTTP response will never
+    learn whether the Insight was built.'
+
+problem_types:
+- id: unauthorized
+  http_status: 401
+  envelope: platform-message-envelope
+  title: Unauthorized
+  detail: 'No valid session or JWT was presented.'
+  remediation: 'Obtain a token from POST /api/auth/login (passing the csrf header) and
+    send it as Authorization on each request, or log in with "session": true and let
+    the browser carry the cookie.'
+  method: probed
+- id: invalid_token
+  http_status: 401
+  envelope: oauth-error-envelope
+  title: invalid_token
+  detail: 'Missing or invalid bearer token on the MCP endpoint.'
+  remediation: 'Read /.well-known/oauth-protected-resource named in the
+    WWW-Authenticate header, then complete the authorization_code (PKCE S256) or
+    client_credentials flow against the authorization server it names, requesting the
+    "mcp" scope.'
+  method: probed
+- id: insight-job-failure
+  http_status: null
+  envelope: websocket-job-envelope
+  title: Insight creation failed
+  detail: 'Asynchronous failure of an Insight build, reported over WebSocket with
+    status FAILURE.'
+  remediation: 'Subscribe to the WebSocket notification channel before issuing the
+    request and match the response by jobId; do not treat the HTTP acknowledgement as
+    completion.'
+  method: searched
+  source: https://help.tellius.com/api/insights-apis
+
+documented_limits_that_produce_errors:
+- limit: 'ML prediction file upload maximum size 250 MB'
+  source: https://help.tellius.com/api/ml-model-apis
+  error_shape: 'Not documented.'
+
+gaps:
+- 'No error-code registry, no numeric or symbolic code space, no per-endpoint error
+  table anywhere in the Tellius documentation.'
+- 'No RFC 9457 problem+json anywhere.'
+- 'No request-id or correlation header is returned on HTTP responses; correlation
+  exists only on the Search WebSocket, via a caller-generated corrId.'
+- 'No documented retry guidance and no Retry-After.'

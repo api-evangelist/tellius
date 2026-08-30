@@ -1,0 +1,62 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.tellius.com/pricing
+name: Tellius plans and pricing
+currency: null
+currency_note: 'No currency is stated because no price is stated. Both tiers show
+  "Customized".'
+billing_model: 'Capacity-based, not per-user. The marketing llms.txt states
+  "Capacity-based pricing with no per-user fees. Contact for details." Volume discounts
+  and term commitments are available.'
+public_prices: false
+plan_count: 2
+
+plans:
+- name: Premium
+  price: null
+  price_label: Customized
+  currency: null
+  billing_period: null
+  users: 'Up to 10 Users'
+  limits:
+    live_pushdown_query: 'Up to 50M rows in live-mode'
+    in_memory_cache: '10GB data storage'
+    automl: '5 Concurrent Jobs'
+    data_pipelines: '5 Concurrent Jobs'
+    feeds: 'Limited'
+  overage: null
+  overage_note: 'No overage pricing is published.'
+- name: Enterprise
+  price: null
+  price_label: Customized
+  currency: null
+  billing_period: null
+  users: 'Unlimited Users'
+  limits:
+    live_pushdown_query: 'Unlimited'
+    in_memory_cache: 'Unlimited'
+    automl: 'Unlimited'
+    data_pipelines: 'Unlimited'
+    feeds: 'Unlimited'
+  overage: null
+
+trial:
+  available: true
+  length: '30 days'
+  url: https://www.tellius.com/free-trial
+  note: 'Marketing llms.txt: "30-day free trial. Production-ready in 4-6 weeks."'
+
+api_pricing:
+  metered: false
+  note: 'Neither the REST API nor the MCP server is separately priced or metered. API
+    and MCP access ride the platform entitlement, and the capacity dimensions that
+    bound them are the tier limits above (concurrent jobs, in-memory cache, live-mode
+    row ceiling) rather than a request quota.'
+
+findings:
+- 'Prices are contact-sales only, but the QUOTAS are published per tier, which is more
+  than most enterprise analytics vendors disclose. Those quotas are the real limits an
+  API integrator hits: 5 concurrent AutoML jobs on Premium bounds how many ML
+  prediction pipelines can run at once, and the 50M-row live-mode ceiling bounds what a
+  tellius_ask question can scan.'
+- 'No self-serve purchase path and no published per-seat or per-call rate.'

@@ -1,0 +1,95 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/embedding-tellius/what-you-should-know-before-embedding
+docs:
+- https://help.tellius.com/embedding-tellius/what-you-should-know-before-embedding
+- https://help.tellius.com/embedding-tellius/embedding-url
+- https://www.tellius.com/platform/embed
+- https://www.tellius.com/platform/kaiya-everywhere
+name: Tellius embeddable components
+note: 'Tellius'' client-side surface is an iFrame-plus-postMessage embedding model
+  rather than a component library. There is no npm-distributed web component, no
+  element library and no loader script: you build an embed URL, drop it in an iFrame,
+  and drive it with postMessage actionTypes. Recorded here because it is a real,
+  documented client-side integration surface distinct from the REST/MCP APIs and from
+  any SDK.'
+
+distribution:
+  model: iframe-embed
+  loader_library: null
+  package: null
+  registry: null
+  note: 'No JavaScript loader library is published to any registry. The host page
+    supplies the iFrame and the postMessage handler itself.'
+
+families:
+- family: Vizpads
+  description: 'Interactive dashboards embedded by URL, driven by postMessage.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-vizpads
+  capabilities:
+  - 'Apply and delete filters — local, global, timeline and resolution filters.'
+  - 'Vizpad-related actionTypes: apply filters, apply resolutions, fetch Business View
+    columns.'
+  - 'Edit, save and share an embedded Vizpad.'
+  - 'Keep, Remove and Drill section actions for interactive exploration.'
+  - 'Add a Viz to an existing or new Vizpad, with tab options.'
+  - 'Row-level policy filters enforced per userId token.'
+- family: Insights
+  description: 'Embedded automated insight creation and viewing.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-insights
+  capabilities:
+  - 'Create and view Insights through postMessage and iFrame URLs.'
+- family: Search
+  description: 'Embedded natural-language search.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-search
+  capabilities:
+  - 'Execute search queries via postMessage, receive visualizations back.'
+  - 'Direct access and session control.'
+- family: Assistant
+  description: 'Embedded Tellius Assistant, in full-interface or conversation-only mode.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-assistant
+- family: Kaiya
+  description: 'Embedded conversational AI — natural language questions and instant
+    insights as a chat experience inside a host application.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-kaiya
+- family: Feed
+  description: 'Embedded real-time anomaly alerts and metric updates.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-feed
+
+integration_mechanism:
+  transport: postMessage
+  concept: actionTypes
+  description: 'The host page posts a message carrying an actionType and a payload to
+    the embedded frame; the frame responds on the same channel. actionTypes cover
+    filter application, resolution setting, Business View column retrieval, keep/remove/drill,
+    Viz addition and query execution.'
+  docs: https://help.tellius.com/getting-started/faqs/embedding-faqs
+
+surface_extensions:
+- name: Kaiya browser extension
+  type: browser-extension
+  description: 'Brings Kaiya into any web page as a side panel — the docs name Veeva,
+    Salesforce and internal portals, and the marketing site adds Power BI and Tableau
+    dashboards, answering "why did this change?" against the same governed
+    definitions and audit trail.'
+  introduced: '6.3'
+  source: https://www.tellius.com/platform/kaiya-everywhere
+- name: Slack integration
+  type: chat-app
+  description: 'Mention @Kaiya in any Slack channel; trigger Missions with slash
+    commands. Delivery channel ids are discoverable over MCP via
+    tellius_list_slack_channels.'
+  introduced: '6.3'
+  docs: https://help.tellius.com/settings/administration/slack-integration
+- name: Microsoft Teams integration
+  type: chat-app
+  description: 'Same model as Slack; channel and team ids discoverable over MCP via
+    tellius_list_teams_channels.'
+  introduced: '6.3'
+
+security:
+  row_level: 'Row-level policy filters are applied to embedded content using userId
+    tokens, so an embed inherits the viewing user''s data permissions.'
+  docs: https://help.tellius.com/embedding-tellius/embedding-url/embedding-vizpads/row-level-policy-filters
+  trusted_domains: 'Trusted domains, sharing permissions and session behaviour are
+    configured under Settings → Security → Configuration.'

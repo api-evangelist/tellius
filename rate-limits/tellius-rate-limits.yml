@@ -1,0 +1,75 @@
+generated: '2026-08-30'
+method: searched
+source: https://help.tellius.com/api
+name: Tellius rate limits
+limit_count: 0
+note: 'Tellius publishes NO API rate limits. Searched the full 565 KB documentation
+  index (help.tellius.com/llms.txt) for "rate limit", "throttl", "quota per", "429"
+  and "Retry-After" — zero hits — and read every page under /api. No limits section,
+  no per-key or per-account ceiling, and no exhaustion status code is documented. This
+  is an honest zero, recorded rather than omitted.'
+
+limits: []
+
+response_headers:
+  documented: []
+  observed: []
+  observed_note: 'Probed a Tellius deployment host unauthenticated on 2026-08-30. The
+    401 responses carry no X-RateLimit-*, no RateLimit-* and no Retry-After. Only
+    standard headers plus strict-transport-security, an etag and a GCLB session
+    cookie were returned, so there is no runtime rate-limit signal for an agent to
+    read.'
+exhaustion_status: null
+
+capacity_limits_instead:
+  note: 'What Tellius bounds is CAPACITY per tier, not request rate. These are the
+    ceilings an integrator actually meets, published on the pricing page rather than
+    in the API reference.'
+  limits:
+  - scope: per-account (Premium tier)
+    dimension: concurrent AutoML jobs
+    limit: 5
+    source: https://www.tellius.com/pricing
+  - scope: per-account (Premium tier)
+    dimension: concurrent data pipeline jobs
+    limit: 5
+    source: https://www.tellius.com/pricing
+  - scope: per-account (Premium tier)
+    dimension: live/pushdown query rows in live-mode
+    limit: 50000000
+    source: https://www.tellius.com/pricing
+  - scope: per-account (Premium tier)
+    dimension: in-memory cache storage
+    limit: 10GB
+    source: https://www.tellius.com/pricing
+  - scope: per-account (Premium tier)
+    dimension: users
+    limit: 10
+    source: https://www.tellius.com/pricing
+  - scope: per-request
+    dimension: ML prediction file upload size
+    limit: 250MB
+    source: https://help.tellius.com/api/ml-model-apis
+  - scope: per-request
+    dimension: 'ML prediction result page size (nrows)'
+    limit: 'default 200, no maximum documented'
+    source: https://help.tellius.com/api/ml-model-apis
+
+soft_guidance:
+- guidance: 'Avoid firing many deep insights at once. Long-running calls hold resources
+    for their whole duration. Queue them rather than launching a large batch in
+    parallel, or fast queries issued at the same time may be left waiting.'
+  applies_to: tellius_deep_insight (MCP)
+  source: https://help.tellius.com/kaiya/tellius-mcp-server
+  note: 'This is the only concurrency guidance Tellius gives an agent, and it is prose
+    advice with no enforced number attached.'
+- guidance: 'Set a generous client timeout — a timeout tuned for a simple query will
+    cut off a deep insight before it finishes.'
+  applies_to: tellius_deep_insight (MCP)
+  source: https://help.tellius.com/kaiya/tellius-mcp-server
+
+findings:
+- 'An agent calling Tellius cannot discover its budget: there is no documented limit,
+  no header, and no 429 contract. Because Tellius is customer-deployed, effective
+  limits are whatever the customer''s cluster and tier capacity allow — but that is
+  inferred, not stated.'

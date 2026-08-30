@@ -1,18 +1,87 @@
 aid: tellius
 name: Tellius
-description: 'Tellius is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Tellius is an agentic analytics platform that deploys AI agents ("Kaiya")
+  on governed enterprise data to automate root cause analysis, variance decomposition
+  and insight delivery across structured and unstructured sources. It sits above the
+  data warehouse (Snowflake, Databricks, BigQuery, Redshift) without moving data, and
+  exposes its analytics engine to developers three ways: a REST + WebSocket platform
+  API (login/JWT, Search, Insights and ML prediction endpoints), an iFrame + postMessage
+  embedding surface for Vizpads, Search, Kaiya and Feeds, and a hosted MCP server that
+  any MCP client can call over streamable HTTP with OAuth. Because Tellius ships as a
+  per-customer Kubernetes deployment, every API base URL and MCP endpoint is tenant-specific
+  rather than a single shared public host. Founded by Ajay Khanna; SOC 2 Type II certified;
+  5x Gartner Magic Quadrant Visionary for Analytics and BI Platforms (2022-2026).'
 url: https://raw.githubusercontent.com/api-evangelist/tellius/refs/heads/main/apis.yml
+image: https://cdn.prod.website-files.com/67fcfe6c0c7705918e4d7984/67fcfe6c0c7705918e4d798e_logo.svg
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-30'
 modified: '2026-08-30'
 tags:
 - Company
-apis: []
+- Analytics
+- Business Intelligence
+- Agentic Analytics
+- Decision Intelligence
+- Artificial Intelligence
+- Machine Learning
+- Data
+- Embedded Analytics
+- Model Context Protocol
+- Natural Language Query
+- Pharmaceutical
+- Consumer Packaged Goods
+- Financial Planning
+apis:
+- aid: tellius:tellius-platform-api
+  name: Tellius Platform API
+  description: 'The Tellius backend REST and WebSocket API. Authenticate against
+    /api/auth/login for a JWT (or a cookie session), then call the Insights APIs
+    (list, delete, notifications), the Search APIs (a WebSocket channel carrying
+    history, suggestion, validation and query-execution messages correlated by
+    corrId), and the ML Model APIs (OAuth2 client_credentials, JSON and file
+    prediction submission, paginated and CSV result retrieval). Tellius is deployed
+    per customer, so the base host is the customer''s own Tellius domain.'
+  humanURL: https://help.tellius.com/api
+  baseURL: https://{tellius-deployment-host}
+  tags:
+  - Analytics
+  - Insights
+  - Search
+  - Machine Learning
+  properties:
+  - type: Documentation
+    url: https://help.tellius.com/api
+  - type: APIReference
+    url: https://help.tellius.com/api
+  - type: Authentication
+    url: authentication/tellius-authentication.yml
+  - type: ErrorCatalog
+    url: errors/tellius-problem-types.yml
+- aid: tellius:tellius-mcp-server
+  name: Tellius MCP Server
+  description: 'Tellius exposes its analytics engine through a hosted MCP server
+    that runs inside each Tellius deployment. It speaks MCP over streamable HTTP
+    (SSE available for older clients) and publishes 25 tools, 6 resources and 3
+    prompts, including tellius_ask (natural-language question to governed SQL and
+    results), tellius_deep_insight (multi-step agentic root cause investigation),
+    and headless workflow, schedule and memory management. Access is OAuth: the
+    endpoint answers unauthenticated calls with an RFC 9728 WWW-Authenticate
+    challenge pointing at /.well-known/oauth-protected-resource.'
+  humanURL: https://help.tellius.com/kaiya/tellius-mcp-server
+  baseURL: https://{tellius-deployment-host}/mcp
+  tags:
+  - Model Context Protocol
+  - Agentic Analytics
+  - Artificial Intelligence
+  properties:
+  - type: MCPServer
+    url: mcp/tellius-mcp.yml
+  - type: Documentation
+    url: https://help.tellius.com/kaiya/tellius-mcp-server
+  - type: OAuthScopes
+    url: scopes/tellius-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +89,69 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.tellius.com/
+- type: DeveloperPortal
+  url: https://help.tellius.com/api
+- type: Documentation
+  url: https://help.tellius.com/
+- type: APIReference
+  url: https://help.tellius.com/api
+- type: GettingStarted
+  url: https://help.tellius.com/getting-started/quick-start-guides
+- type: Support
+  url: https://support.tellius.com/support/home
+- type: Blog
+  url: https://www.tellius.com/resources
+- type: GitHubOrganization
+  url: https://github.com/Tellius
+- type: Pricing
+  url: https://www.tellius.com/pricing
+- type: SignUp
+  url: https://www.tellius.com/free-trial
+- type: TermsOfService
+  url: https://www.tellius.com/eula
+- type: PrivacyPolicy
+  url: https://www.tellius.com/privacy-policy
+- type: ChangeLog
+  url: changelog/tellius-changelog.yml
+- type: Lifecycle
+  url: lifecycle/tellius-lifecycle.yml
+- type: Authentication
+  url: authentication/tellius-authentication.yml
+- type: OAuthScopes
+  url: scopes/tellius-scopes.yml
+- type: Conventions
+  url: conventions/tellius-conventions.yml
+- type: Conformance
+  url: conformance/tellius-conformance.yml
+- type: Compliance
+  url: conformance/tellius-conformance.yml
+- type: MCPServer
+  url: mcp/tellius-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/tellius-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/tellius-llms.txt
+- type: WellKnown
+  url: well-known/tellius-well-known.yml
+- type: Components
+  url: components/tellius-components.yml
+- type: DataModel
+  url: data-model/tellius-data-model.yml
+- type: Packages
+  url: packages/tellius-packages.yml
+- type: Plans
+  url: plans/tellius-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/tellius-rate-limits.yml
+- type: AsyncAPI
+  url: asyncapi/tellius-search-asyncapi.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: DomainSecurity
+  url: security/tellius-domain-security.yml
+x-enrichment:
+  date: '2026-08-30'
+  status: enriched
+  artifacts_added: 25
+  pass: local-v1

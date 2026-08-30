@@ -1,0 +1,256 @@
+generated: '2026-08-30'
+method: derived
+source: 'https://help.tellius.com/api/search-apis and https://help.tellius.com/api/insights-apis'
+x-provenance: 'DERIVED BY API EVANGELIST FROM TELLIUS DOCUMENTATION. Tellius does NOT
+  publish an AsyncAPI document. Tellius runs a real, documented WebSocket event surface
+  — the entire Search function is WebSocket-based, and asynchronous jobs such as
+  Insight creation report completion over the same channel — but describes it only in
+  prose and example payloads. This document transcribes those documented messages into
+  AsyncAPI 3.0.0 so the event surface is machine-readable. Every channel, message and
+  field below appears in Tellius'' own published examples; nothing has been invented.
+  Field types are inferred from the example values. The server URL is templated because
+  Tellius is deployed per customer.'
+asyncapi: 3.0.0
+info:
+  title: Tellius Search and Job Notification WebSocket API
+  version: '6.3'
+  description: |
+    Tellius' Search surface is not REST. Clients open a WebSocket, then exchange
+    request and response messages that are correlated by a caller-generated `corrId`.
+    The same channel delivers asynchronous job notifications, which is how a client
+    learns whether an Insight was actually built — the HTTP acknowledgement does not
+    say.
+
+    Derived from Tellius documentation by API Evangelist; not published by Tellius.
+  contact:
+    name: Tellius
+    url: https://www.tellius.com/
+  externalDocs:
+    url: https://help.tellius.com/api/search-apis
+servers:
+  deployment:
+    host: '{tellius-deployment-host}'
+    protocol: wss
+    description: 'Each Tellius customer runs its own deployment; there is no shared
+      public host.'
+    variables:
+      tellius-deployment-host:
+        description: The customer's own Tellius domain.
+        default: your-tellius-domain.example.com
+channels:
+  search:
+    address: /search
+    description: 'The Search query channel. Address is not stated in the docs and is
+      recorded as a placeholder; the message shapes below are documented verbatim.'
+    x-address-provenance: inferred
+    messages:
+      heartbeat:
+        $ref: '#/components/messages/Heartbeat'
+      viewHistoryRequest:
+        $ref: '#/components/messages/ViewHistoryRequest'
+      viewHistoryResponse:
+        $ref: '#/components/messages/ViewHistoryResponse'
+      viewSuggestionsRequest:
+        $ref: '#/components/messages/ViewSuggestionsRequest'
+      viewSuggestionsResponse:
+        $ref: '#/components/messages/ViewSuggestionsResponse'
+      queryRequest:
+        $ref: '#/components/messages/QueryRequest'
+  notifications:
+    address: /notifications
+    description: 'Asynchronous job completion notifications for Insight, data and ML
+      jobs. Address is not stated in the docs and is recorded as a placeholder.'
+    x-address-provenance: inferred
+    messages:
+      jobNotification:
+        $ref: '#/components/messages/JobNotification'
+operations:
+  sendSearchRequest:
+    action: send
+    channel:
+      $ref: '#/channels/search'
+    summary: 'Send a history, suggestion, validation or execution request.'
+  receiveSearchResponse:
+    action: receive
+    channel:
+      $ref: '#/channels/search'
+    summary: 'Receive the matching response, correlated by corrId.'
+  receiveJobNotification:
+    action: receive
+    channel:
+      $ref: '#/channels/notifications'
+    summary: 'Receive asynchronous job success or failure.'
+components:
+  messages:
+    Heartbeat:
+      name: heartbeat
+      summary: 'Connection keep-alive / connection test.'
+      payload:
+        type: object
+    ViewHistoryRequest:
+      name: viewHistoryRequest
+      summary: 'Retrieve previously typed queries matching a partial string.'
+      payload:
+        $ref: '#/components/schemas/ViewHistoryRequest'
+    ViewHistoryResponse:
+      name: viewHistoryResponse
+      payload:
+        $ref: '#/components/schemas/ViewHistoryResponse'
+    ViewSuggestionsRequest:
+      name: viewSuggestionsRequest
+      summary: 'Retrieve NLP token suggestions for a partial term against a Business View.'
+      payload:
+        $ref: '#/components/schemas/ViewSuggestionsRequest'
+    ViewSuggestionsResponse:
+      name: viewSuggestionsResponse
+      payload:
+        $ref: '#/components/schemas/ViewSuggestionsResponse'
+    QueryRequest:
+      name: queryRequest
+      summary: |
+        One message shape serves both validation and execution. With
+        enterKeyPress=false the query is validated and tokenized only; with
+        performQuery, enterKeyPress and createViz all true it is executed and a
+        visualization is created. This is Tellius' only rehearsal primitive.
+      payload:
+        $ref: '#/components/schemas/QueryRequest'
+    JobNotification:
+      name: jobNotification
+      summary: 'Asynchronous job outcome. status is SUCCESS or FAILURE.'
+      payload:
+        $ref: '#/components/schemas/JobNotification'
+  schemas:
+    ViewHistoryRequest:
+      type: object
+      required: [requestType, corrId]
+      properties:
+        requestType:
+          type: string
+          const: history
+        partialQuery:
+          type: string
+          examples: ['profi']
+        maximumAllowedRows:
+          type: integer
+          examples: [10]
+        limit:
+          type: integer
+          examples: [10]
+        isSearchQL:
+          type: boolean
+        corrId:
+          $ref: '#/components/schemas/CorrId'
+    ViewHistoryResponse:
+      type: object
+      properties:
+        responseType:
+          type: string
+          const: history
+        totalCount:
+          type: integer
+          examples: [154]
+        query:
+          type: string
+        history:
+          type: array
+          items:
+            type: object
+    ViewSuggestionsRequest:
+      type: object
+      required: [businessViewId, corrId]
+      properties:
+        businessViewId:
+          $ref: '#/components/schemas/BusinessViewId'
+        getNlpSuggestionsFor:
+          type: string
+          examples: ['profit']
+        performQuery:
+          type: boolean
+        timezone:
+          type: string
+          examples: ['GMT+0530']
+        corrId:
+          $ref: '#/components/schemas/CorrId'
+    ViewSuggestionsResponse:
+      type: object
+      properties:
+        suggestions:
+          type: array
+          items:
+            type: string
+        original:
+          type: string
+        nextWordStartInd:
+          type: integer
+        corrId:
+          $ref: '#/components/schemas/CorrId'
+    QueryRequest:
+      type: object
+      required: [businessViewId, nlpQuery, corrId]
+      properties:
+        businessViewId:
+          $ref: '#/components/schemas/BusinessViewId'
+        nlpQuery:
+          type: string
+          examples: ['profit']
+        enterKeyPress:
+          type: boolean
+          description: 'false validates and tokenizes without executing; true executes.'
+        performQuery:
+          type: boolean
+        createViz:
+          type: boolean
+        timezone:
+          type: string
+        corrId:
+          $ref: '#/components/schemas/CorrId'
+    JobNotification:
+      type: object
+      properties:
+        request:
+          type: object
+          description: 'Echo of the request object that created the job.'
+        result:
+          type: object
+          properties:
+            insightId:
+              type: string
+              examples: ['insight_1e2a']
+            driverId:
+              type: string
+              examples: ['driver_c9d9']
+            type:
+              type: string
+              examples: ['DriverCreateResponse']
+        status:
+          type: string
+          enum: [SUCCESS, FAILURE]
+        jobId:
+          type: string
+          format: uuid
+        jobType:
+          type: string
+          examples: ['SegmentDiscoveryInsight']
+        starttime:
+          type: string
+          format: date-time
+        timetaken:
+          type: string
+          examples: ['26s']
+        createdBy:
+          type: string
+        consumed:
+          type: boolean
+        estimatedResourceSizeBytes:
+          type: integer
+    CorrId:
+      type: string
+      description: |
+        Caller-generated correlation id. Tellius: "For each query function, users need
+        to generate corrId. Every Response will be matched with its corresponding
+        Request using corrId." This is the only tracing primitive Tellius exposes.
+      examples: ['Ma6jN', 'auW6F', 'f7jfx', 'Eymyb']
+    BusinessViewId:
+      type: string
+      pattern: '^bv_'
+      examples: ['bv_c97bee81-4743-47a2-95e8-837946757617']

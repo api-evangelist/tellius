@@ -1,0 +1,52 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.tellius.com/llms.txt
+name: Tellius llms.txt
+file: llms/tellius-llms.txt
+http_status: 200
+content_type: text/plain; charset=utf-8
+size_bytes: 59814
+last_updated_by_provider: 'July 15, 2026 (stated in the document itself)'
+note: 'Saved VERBATIM from Tellius'' own host. Tellius publishes TWO llms.txt files and
+  they serve different purposes.'
+documents:
+- url: https://www.tellius.com/llms.txt
+  host: www.tellius.com
+  status: 200
+  size_bytes: 59814
+  saved_as: llms/tellius-llms.txt
+  kind: 'Marketing / positioning llms.txt. Far richer than the convention requires: a
+    category definition, a competitor comparison matrix, named customers, industry and
+    use-case link sections, policy links, and roughly 25 answered FAQs written for
+    retrieval. It is an answer corpus, not just a link index.'
+- url: https://help.tellius.com/llms.txt
+  host: help.tellius.com
+  status: 200
+  size_bytes: 565049
+  saved_as: null
+  kind: 'Documentation index, GitBook-generated. Lists every documentation page across
+    seven retained release trees (6.3 back to 5.4) with a one-line description, each as
+    an absolute .md URL.'
+  not_saved_reason: 'Large verbatim docs dump; not committed (see .gitignore
+    *-llms-full.txt). Referenced by URL instead.'
+agent_affordances:
+- affordance: markdown twin
+  detail: 'Every help.tellius.com page is available as Markdown by appending .md to its
+    URL. Confirmed on nine pages fetched during this pass; all returned 200 with clean
+    markdown.'
+- affordance: documentation Q&A endpoint
+  detail: 'GitBook exposes an ask parameter on every page:
+    GET https://help.tellius.com/<page>.md?ask=<question>&goal=<endgoal> returns a
+    direct answer plus relevant excerpts and sources. This is an agent-callable
+    retrieval surface over the documentation, advertised in an "Agent Instructions"
+    block appended to every markdown page.'
+- affordance: robots
+  detail: 'https://www.tellius.com/robots.txt (200) is fully permissive — "User-agent:
+    * / Disallow:" — with a sitemap pointer. No agent-specific blocks, no AI crawler
+    exclusions.'
+findings:
+- 'Tellius is unusually well provisioned for agent retrieval on the DOCUMENTATION side —
+  two llms.txt files, markdown twins on every page, and a per-page question endpoint —
+  while publishing no OpenAPI, no AsyncAPI, no agent card and no security.txt. The
+  reading surface is excellent; the machine-readable CONTRACT surface is empty apart
+  from the MCP server and its OAuth metadata.'
