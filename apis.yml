@@ -25,6 +25,21 @@ tags:
 - Agentic Analytics
 - Decision Intelligence
 - Artificial Intelligence
+- Machine-Learning
+- Data
+- Embedded Analytics
+- MCP
+- Natural Language Query
+- Pharmaceuticals
+- Consumer Packaged Goods
+- Financial Planning
+tags_raw:
+- Company
+- Analytics
+- Business Intelligence
+- Agentic Analytics
+- Decision Intelligence
+- Artificial Intelligence
 - Machine Learning
 - Data
 - Embedded Analytics
@@ -46,6 +61,11 @@ apis:
   humanURL: https://help.tellius.com/api
   baseURL: https://{tellius-deployment-host}
   tags:
+  - Analytics
+  - Insights
+  - Search
+  - Machine-Learning
+  tags_raw:
   - Analytics
   - Insights
   - Search
@@ -72,6 +92,10 @@ apis:
   humanURL: https://help.tellius.com/kaiya/tellius-mcp-server
   baseURL: https://{tellius-deployment-host}/mcp
   tags:
+  - MCP
+  - Agentic Analytics
+  - Artificial Intelligence
+  tags_raw:
   - Model Context Protocol
   - Agentic Analytics
   - Artificial Intelligence
