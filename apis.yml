@@ -12,6 +12,22 @@ description: 'Tellius is an agentic analytics platform that deploys AI agents ("
   rather than a single shared public host. Founded by Ajay Khanna; SOC 2 Type II certified;
   5x Gartner Magic Quadrant Visionary for Analytics and BI Platforms (2022-2026).'
 url: https://raw.githubusercontent.com/api-evangelist/tellius/refs/heads/main/apis.yml
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  - scopes
+  - rate-limits
+  - security
+  generated: '2026-09-02'
+  method: derived
 image: https://cdn.prod.website-files.com/67fcfe6c0c7705918e4d7984/67fcfe6c0c7705918e4d798e_logo.svg
 x-type: company
 x-source: harvest:secondary-market
