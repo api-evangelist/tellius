@@ -41,7 +41,7 @@ tags:
 - Agentic Analytics
 - Decision Intelligence
 - Artificial Intelligence
-- Machine-Learning
+- Machine Learning
 - Data
 - Embedded Analytics
 - MCP
@@ -49,6 +49,7 @@ tags:
 - Pharmaceuticals
 - Consumer Packaged Goods
 - Financial Planning
+- Real-Time
 tags_raw:
 - Company
 - Analytics
@@ -64,6 +65,8 @@ tags_raw:
 - Pharmaceutical
 - Consumer Packaged Goods
 - Financial Planning
+- Machine-Learning
+- Real-Time
 apis:
 - aid: tellius:tellius-platform-api
   name: Tellius Platform API
@@ -80,12 +83,13 @@ apis:
   - Analytics
   - Insights
   - Search
-  - Machine-Learning
+  - Machine Learning
   tags_raw:
   - Analytics
   - Insights
   - Search
   - Machine Learning
+  - Machine-Learning
   properties:
   - type: Documentation
     url: https://help.tellius.com/api
