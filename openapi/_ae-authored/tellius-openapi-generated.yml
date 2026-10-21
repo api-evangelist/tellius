@@ -1,0 +1,554 @@
+openapi: 3.1.0
+info:
+  title: Tellius API
+  version: '2026-10-20'
+  description: 'GENERATED FROM DOCUMENTATION by API Evangelist on 2026-10-20: 32 operation(s)
+    read from 40 public documentation page(s) (each operation names its page in x-source).
+    This is not the provider''s published contract; Tellius has published no machine-readable
+    contract that the pipeline could find. Engine: anthropic.'
+  x-evidence-tiers:
+    code-example: 7
+    documentation: 25
+    pages-with-code: 4
+    pages-read: 40
+  x-generated-from: documentation
+  x-provenance: generated
+  x-authored-by: API Evangelist
+  x-generated: '2026-10-20'
+  x-generator: generate-contract-from-docs.py
+  x-engine: anthropic
+  x-sources:
+  - https://help.tellius.com/api/search-apis.md
+  - https://help.tellius.com/api/insights-apis.md
+  - https://help.tellius.com/api/ml-model-apis.md
+  - https://help.tellius.com/tellius-6.3/api/search-apis.md
+  - https://help.tellius.com/tellius-6.3/api/insights-apis.md
+  - https://help.tellius.com/tellius-6.3/api/ml-model-apis.md
+  - https://help.tellius.com/settings/preferences.md
+  - https://help.tellius.com/tellius-6.3/settings/preferences.md
+  - https://help.tellius.com/settings/preferences/help-and-support.md
+  - https://help.tellius.com/settings/preferences/calendar-settings.md
+  - https://help.tellius.com/settings/preferences/general-preferences.md
+  - https://help.tellius.com/tellius-6.3/settings/preferences/help-and-support.md
+  - https://help.tellius.com/tellius-6.3/settings/preferences/calendar-settings.md
+  - https://help.tellius.com/tellius-6.3/settings/preferences/general-preferences.md
+  - https://help.tellius.com/api.md
+  - https://help.tellius.com/tellius-6.3/api.md
+  - https://help.tellius.com/settings/vizpad/backup-and-restore.md
+  - https://help.tellius.com/data/preparing-your-datasets/sql-code-snippets.md
+  - https://help.tellius.com/tellius-6.3/settings/vizpad/backup-and-restore.md
+  - https://help.tellius.com/vizpads-explore/actions-in-edit-mode/copy-to-clipboard.md
+  - https://help.tellius.com/tellius-6.3/data/preparing-your-datasets/sql-code-snippets.md
+  - https://help.tellius.com/getting-started/admin-guide/monitoring-usage-and-system-resources.md
+  - https://help.tellius.com/tellius-6.3/vizpads-explore/actions-in-edit-mode/copy-to-clipboard.md
+  - https://help.tellius.com/tellius-6.3/getting-started/admin-guide/monitoring-usage-and-system-resources.md
+  - https://help.tellius.com/tellius-6.2/api.md
+  - https://help.tellius.com/getting-started/faqs.md
+  - https://help.tellius.com/getting-started/admin-guide.md
+  - https://help.tellius.com/getting-started/faqs/search-faqs.md
+  - https://help.tellius.com/getting-started/universal-search.md
+  - https://help.tellius.com/tellius-6.3/getting-started/faqs.md
+  - https://help.tellius.com/getting-started/faqs/vizpads-faqs.md
+  - https://help.tellius.com/getting-started/tellius-home-page.md
+  - https://help.tellius.com/getting-started/faqs/insights-faqs.md
+  - https://help.tellius.com/getting-started/quick-start-guides.md
+  - https://help.tellius.com/getting-started/faqs/embedding-faqs.md
+  - https://help.tellius.com/getting-started/say-hello-to-tellius.md
+  - https://help.tellius.com/getting-started/faqs/environment-faqs.md
+  - https://help.tellius.com/getting-started/faqs/data-caching-faqs.md
+  - https://help.tellius.com/getting-started/tellius-best-practices.md
+  - https://help.tellius.com/getting-started/admin-guide/what-is-ice.md
+  x-pruned: '2026-10-20: removed 23 docs-page (.md) paths the generator mis-read as
+    operations'
+servers:
+- url: https://{tellius-deployment-host}
+  description: Per-customer Tellius deployment host (docs examples use uat1.app.tellius.com)
+  variables:
+    tellius-deployment-host:
+      default: uat1.app.tellius.com
+paths:
+  /insight/insightID:
+    get:
+      operationId: get_insight_insightID
+      tags:
+      - Insight
+      summary: Mark notifications as read for an Insight.
+      x-source: https://help.tellius.com/api/insights-apis.md
+      responses:
+        '200':
+          description: Success (status as documented)
+      x-evidence:
+        kind: documentation
+    put:
+      operationId: put_insight_insightID
+      tags:
+      - Insight
+      summary: PUT /insight/insightID
+      x-source: https://help.tellius.com/api/insights-apis.md
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutInsightInsightidRequest'
+      responses:
+        '200':
+          description: Success (status as documented)
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: "curl -X PUT \\ https://dev.app.tellius.com/insight/insightID  -H\
+          \ 'authorization: <your_token_here>'  -H 'cache-control: no-cache'  -H 'content-type:\
+          \ application/json'  -H 'postman-token: b97aaee9-ac75-369e-2d75-026e4a7ef624'\
+          \  -d '{ \n\"consumed\": true\n}'\n```"
+  /insight/myInsightId4:
+    delete:
+      operationId: delete_insight_myInsightId4
+      tags:
+      - Insight
+      summary: DELETE /insight/myInsightId4
+      x-source: https://help.tellius.com/api/insights-apis.md
+      responses:
+        '200':
+          description: Success (status as documented)
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: 'curl -v -X DELETE  -H "Content-Type: application/json"
+
+          -H "Cache-Control: no-cache"  -H ''Authorization: <your_token_here>  http://52.87.228.68:8082/insight/myInsightId4  
+
+          ```'
+  /oauth/client_credentials_token:
+    post:
+      operationId: post_oauth_client_credentials_token
+      tags:
+      - Oauth
+      summary: POST /oauth/client_credentials_token
+      x-source: https://help.tellius.com/api/ml-model-apis.md
+      responses:
+        '201':
+          description: Success (shape read from the example response on the page)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostOauthClientCredentialsTokenResponse'
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: 'curl -X POST http://uat1.app.tellius.com/oauth/client_credentials_token  -H
+          ''content-type: application/x-www-form-urlencoded''  -d ''client_id=your-client-id&client_secret=your-secret&grant_type=client_credentials''
+
+          ```'
+  /oauth/refresh_token:
+    post:
+      operationId: post_oauth_refresh_token
+      tags:
+      - Oauth
+      summary: POST /oauth/refresh_token
+      x-source: https://help.tellius.com/api/ml-model-apis.md
+      responses:
+        '201':
+          description: Success (shape read from the example response on the page)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostOauthRefreshTokenResponse'
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: 'curl -X POST http://uat1.app.tellius.com/oauth/refresh_token  -H
+          ''content-type: application/x-www-form-urlencoded''  -d ''refresh_token=your-refresh-token&secret=your-secret&grant_type=refresh_token''
+
+          ```'
+  /proxy/ml/external/predict/download:
+    get:
+      operationId: get_proxy_ml_external_predict_download
+      tags:
+      - Proxy
+      summary: GET /proxy/ml/external/predict/download
+      x-source: https://help.tellius.com/api/ml-model-apis.md
+      parameters:
+      - name: predictedDataId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success (shape read from the example response on the page)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProxyMlExternalPredictDownloadResponse'
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: 'curl -X GET  ''http://uat1.app.tellius.com/proxy/ml/external/predict/download?predictedDataId=your-id''  -H
+          ''Authorization: Bearer your-access-token''
+
+          ```'
+  /proxy/ml/external/predict/file:
+    post:
+      operationId: post_proxy_ml_external_predict_file
+      tags:
+      - Proxy
+      summary: POST /proxy/ml/external/predict/file
+      x-source: https://help.tellius.com/api/ml-model-apis.md
+      responses:
+        '201':
+          description: Success (shape read from the example response on the page)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostProxyMlExternalPredictFileResponse'
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: 'curl -X POST http://uat1.app.tellius.com/proxy/ml/external/predict/file  -H
+          ''Authorization: Bearer your-access-token''  -F ''metadata={"sourceType":"csv","modelId":"externalMLApiTestModelId","options":{"header":"true"}}''  -F
+          content=@adult_salary_train.csv
+
+          ```'
+  /proxy/ml/external/predict/view:
+    get:
+      operationId: get_proxy_ml_external_predict_view
+      tags:
+      - Proxy
+      summary: GET /proxy/ml/external/predict/view
+      x-source: https://help.tellius.com/api/ml-model-apis.md
+      parameters:
+      - name: nrows
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: predictedDataId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: rowoffset
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success (shape read from the example response on the page)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProxyMlExternalPredictViewResponse'
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: 'curl -X GET  ''http://uat1.app.tellius.com/proxy/ml/external/predict/view?predictedDataId=your-id&nrows=200&rowoffset=0''  -H
+          ''Authorization: Bearer your-access-token''
+
+          ```'
+components:
+  schemas:
+    GetApiMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: A direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetApiSearchApisMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts from the documentation
+        sources:
+          type: array
+          description: Sources from the documentation
+    GetGettingStartedAdminGuideMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: A direct answer to the question asked
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedAdminGuideMonitoringUsageAndSystemResources:
+      type: object
+      properties:
+        content:
+          type: string
+          description: The documentation page content in Markdown format
+    GetGettingStartedAdminGuideWhatIsIceMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question asked
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedFaqsMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedFaqsEmbeddingFaqsMdResponse:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Direct answer and relevant excerpts from the documentation
+    GetGettingStartedFaqsEnvironmentFaqsMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question posed.
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation.
+    GetGettingStartedFaqsInsightsFaqsMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts from the documentation
+        sources:
+          type: array
+          description: Source documentation sections
+    GetGettingStartedFaqsSearchFaqsMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedFaqsVizpadsFaqsMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedQuickStartGuidesMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: A direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedSayHelloToTelliusMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedTelliusBestPracticesMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: A direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetGettingStartedTelliusHomePageMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    PutInsightInsightidRequest:
+      type: object
+      properties:
+        consumed:
+          type: boolean
+    PostOauthClientCredentialsTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        token_type:
+          type: string
+    PostOauthRefreshTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        token_type:
+          type: string
+    GetProxyMlExternalPredictDownloadResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              age:
+                type: string
+              capital_gain:
+                type: string
+              salary_prediction:
+                type: string
+              salary_probability:
+                type: string
+    PostProxyMlExternalPredictFileResponse:
+      type: object
+      properties:
+        predictedDataId:
+          type: string
+    GetProxyMlExternalPredictViewResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              age:
+                type: string
+              capital_gain:
+                type: string
+              salary_prediction:
+                type: string
+              salary_probability:
+                type: string
+    GetSettingsPreferencesMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: A direct answer to the question posed in the ask parameter.
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation.
+    GetSettingsPreferencesHelpAndSupportMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetSettingsVizpadBackupAndRestoreMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question asked
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetTellius62ApiMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts from the documentation
+        sources:
+          type: array
+          description: Sources cited from the documentation
+    GetTellius63ApiMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: A direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts from the documentation
+        sources:
+          type: array
+          description: Sources from the documentation
+    GetTellius63GettingStartedAdminGuideMonitoringUsageAndSystem:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question asked
+        excerpts:
+          type: array
+          description: Relevant excerpts from the documentation
+        sources:
+          type: array
+          description: References to documentation sections
+    GetTellius63GettingStartedFaqsMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question
+        excerpts:
+          type: array
+          description: Relevant excerpts from the documentation
+        sources:
+          type: array
+          description: Sources and related documentation sections
+    GetTellius63SettingsPreferencesMdResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: Direct answer to the question about preferences
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+    GetTellius63VizpadsExploreActionsInEditModeCopyToClipboardMd:
+      type: object
+      properties:
+        content:
+          type: string
+          description: The markdown documentation content and direct answer to the
+            query
+        excerpts:
+          type: array
+          description: Relevant excerpts and sources from the documentation
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security:
+- bearer: []
+tags:
+- name: Api
+- name: Getting Started
+- name: Insight
+- name: Oauth
+- name: Proxy
+- name: Settings
+- name: Tellius 6

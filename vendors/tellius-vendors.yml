@@ -1,0 +1,77 @@
+generated: '2026-10-20'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: cloudflare
+  name: Cloudflare
+  area: cdn
+  host: www.tellius.com
+  evidence: header:cf-ray
+  signal: header
+  confidence: high
+  kin_score:
+  - https_enforced
+  - hsts
+- vendor: gitbook
+  name: GitBook
+  area: documentation
+  host: help.tellius.com
+  evidence: cname:gitbook.io
+  signal: docs-platform
+  confidence: high
+  kin_score:
+  - openapi_published
+  - llms_txt
+- vendor: vercel
+  name: Vercel
+  area: hosting
+  host: help.tellius.com
+  evidence: header:x-vercel-id
+  signal: header
+  confidence: high
+  kin_score: []
+- vendor: freshdesk
+  name: Freshdesk
+  area: support
+  host: support.tellius.com
+  evidence: cname:freshdesk.com
+  signal: cname
+  confidence: high
+  kin_score:
+  - support_channel
+reliance:
+  areas_vendor_served:
+  - cdn
+  - documentation
+  - hosting
+  - support
+  vendor_count: 4
+  areas_observed: 12
+  share_of_observable_areas: 0.333
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: gitbook'
+- www.tellius.com (Website)
+- help.tellius.com (DeveloperPortal)
+- help.tellius.com (Documentation)
+- help.tellius.com (APIReference)
+- help.tellius.com (GettingStarted)
+- support.tellius.com (Support)
+- www.tellius.com (SignUp)
+- '{tellius-deployment-host} (baseURL)'
+- '{tellius-deployment-host} (mcp)'

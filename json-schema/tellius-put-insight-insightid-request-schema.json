@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/tellius/main/json-schema/tellius-put-insight-insightid-request-schema.json",
+  "title": "PutInsightInsightidRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/PutInsightInsightidRequest",
+  "type": "object",
+  "properties": {
+    "consumed": {
+      "type": "boolean"
+    }
+  }
+}

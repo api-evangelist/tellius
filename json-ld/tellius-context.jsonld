@@ -1,0 +1,86 @@
+{
+  "@context": {
+    "@vocab": "https://tellius.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "tellius": "https://tellius.com/schema#",
+    "GetApiMdResponse": "tellius:GetApiMdResponse",
+    "answer": {
+      "@id": "tellius:answer",
+      "@type": "xsd:string"
+    },
+    "excerpts": {
+      "@id": "tellius:excerpts",
+      "@container": "@list"
+    },
+    "GetApiSearchApisMdResponse": "tellius:GetApiSearchApisMdResponse",
+    "sources": {
+      "@id": "tellius:sources",
+      "@container": "@list"
+    },
+    "GetGettingStartedAdminGuideMdResponse": "tellius:GetGettingStartedAdminGuideMdResponse",
+    "GetGettingStartedAdminGuideMonitoringUsageAndSystemResources": "tellius:GetGettingStartedAdminGuideMonitoringUsageAndSystemResources",
+    "content": {
+      "@id": "tellius:content",
+      "@type": "xsd:string"
+    },
+    "GetGettingStartedAdminGuideWhatIsIceMdResponse": "tellius:GetGettingStartedAdminGuideWhatIsIceMdResponse",
+    "GetGettingStartedFaqsMdResponse": "tellius:GetGettingStartedFaqsMdResponse",
+    "GetGettingStartedFaqsEmbeddingFaqsMdResponse": "tellius:GetGettingStartedFaqsEmbeddingFaqsMdResponse",
+    "GetGettingStartedFaqsEnvironmentFaqsMdResponse": "tellius:GetGettingStartedFaqsEnvironmentFaqsMdResponse",
+    "GetGettingStartedFaqsInsightsFaqsMdResponse": "tellius:GetGettingStartedFaqsInsightsFaqsMdResponse",
+    "GetGettingStartedFaqsSearchFaqsMdResponse": "tellius:GetGettingStartedFaqsSearchFaqsMdResponse",
+    "GetGettingStartedFaqsVizpadsFaqsMdResponse": "tellius:GetGettingStartedFaqsVizpadsFaqsMdResponse",
+    "GetGettingStartedQuickStartGuidesMdResponse": "tellius:GetGettingStartedQuickStartGuidesMdResponse",
+    "GetGettingStartedSayHelloToTelliusMdResponse": "tellius:GetGettingStartedSayHelloToTelliusMdResponse",
+    "GetGettingStartedTelliusBestPracticesMdResponse": "tellius:GetGettingStartedTelliusBestPracticesMdResponse",
+    "GetGettingStartedTelliusHomePageMdResponse": "tellius:GetGettingStartedTelliusHomePageMdResponse",
+    "PutInsightInsightidRequest": "tellius:PutInsightInsightidRequest",
+    "consumed": {
+      "@id": "tellius:consumed",
+      "@type": "xsd:boolean"
+    },
+    "PostOauthClientCredentialsTokenResponse": "tellius:PostOauthClientCredentialsTokenResponse",
+    "access_token": {
+      "@id": "tellius:access_token",
+      "@type": "xsd:string"
+    },
+    "refresh_token": {
+      "@id": "tellius:refresh_token",
+      "@type": "xsd:string"
+    },
+    "token_type": {
+      "@id": "tellius:token_type",
+      "@type": "xsd:string"
+    },
+    "PostOauthRefreshTokenResponse": "tellius:PostOauthRefreshTokenResponse",
+    "GetProxyMlExternalPredictDownloadResponse": "tellius:GetProxyMlExternalPredictDownloadResponse",
+    "data": {
+      "@id": "tellius:data",
+      "@container": "@list"
+    },
+    "PostProxyMlExternalPredictFileResponse": "tellius:PostProxyMlExternalPredictFileResponse",
+    "predictedDataId": {
+      "@id": "tellius:predictedDataId",
+      "@type": "xsd:string"
+    },
+    "GetProxyMlExternalPredictViewResponse": "tellius:GetProxyMlExternalPredictViewResponse",
+    "GetSettingsPreferencesMdResponse": "tellius:GetSettingsPreferencesMdResponse",
+    "GetSettingsPreferencesHelpAndSupportMdResponse": "tellius:GetSettingsPreferencesHelpAndSupportMdResponse",
+    "GetSettingsVizpadBackupAndRestoreMdResponse": "tellius:GetSettingsVizpadBackupAndRestoreMdResponse",
+    "GetTellius62ApiMdResponse": "tellius:GetTellius62ApiMdResponse",
+    "GetTellius63ApiMdResponse": "tellius:GetTellius63ApiMdResponse",
+    "GetTellius63GettingStartedAdminGuideMonitoringUsageAndSystem": "tellius:GetTellius63GettingStartedAdminGuideMonitoringUsageAndSystem",
+    "GetTellius63GettingStartedFaqsMdResponse": "tellius:GetTellius63GettingStartedFaqsMdResponse",
+    "GetTellius63SettingsPreferencesMdResponse": "tellius:GetTellius63SettingsPreferencesMdResponse",
+    "GetTellius63VizpadsExploreActionsInEditModeCopyToClipboardMd": "tellius:GetTellius63VizpadsExploreActionsInEditModeCopyToClipboardMd"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Tellius API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Tellius's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-20) from openapi/_ae-authored/tellius-openapi-generated.yml.",
+  "dcterms:created": "2026-10-20",
+  "dcterms:source": [
+    "openapi/_ae-authored/tellius-openapi-generated.yml"
+  ]
+}

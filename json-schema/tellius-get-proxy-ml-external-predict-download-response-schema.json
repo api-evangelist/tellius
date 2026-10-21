@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/tellius/main/json-schema/tellius-get-proxy-ml-external-predict-download-response-schema.json",
+  "title": "GetProxyMlExternalPredictDownloadResponse",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetProxyMlExternalPredictDownloadResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "age": {
+            "type": "string"
+          },
+          "capital_gain": {
+            "type": "string"
+          },
+          "salary_prediction": {
+            "type": "string"
+          },
+          "salary_probability": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,16 +1,12 @@
 aid: tellius
 name: Tellius
-description: 'Tellius is an agentic analytics platform that deploys AI agents ("Kaiya")
-  on governed enterprise data to automate root cause analysis, variance decomposition
-  and insight delivery across structured and unstructured sources. It sits above the
-  data warehouse (Snowflake, Databricks, BigQuery, Redshift) without moving data, and
-  exposes its analytics engine to developers three ways: a REST + WebSocket platform
-  API (login/JWT, Search, Insights and ML prediction endpoints), an iFrame + postMessage
-  embedding surface for Vizpads, Search, Kaiya and Feeds, and a hosted MCP server that
-  any MCP client can call over streamable HTTP with OAuth. Because Tellius ships as a
-  per-customer Kubernetes deployment, every API base URL and MCP endpoint is tenant-specific
-  rather than a single shared public host. Founded by Ajay Khanna; SOC 2 Type II certified;
-  5x Gartner Magic Quadrant Visionary for Analytics and BI Platforms (2022-2026).'
+description: 'Tellius is an agentic analytics platform that deploys AI agents ("Kaiya") on governed enterprise data to automate root cause analysis,
+  variance decomposition and insight delivery across structured and unstructured sources. It sits above the data warehouse (Snowflake, Databricks,
+  BigQuery, Redshift) without moving data, and exposes its analytics engine to developers three ways: a REST + WebSocket platform API (login/JWT,
+  Search, Insights and ML prediction endpoints), an iFrame + postMessage embedding surface for Vizpads, Search, Kaiya and Feeds, and a hosted
+  MCP server that any MCP client can call over streamable HTTP with OAuth. Because Tellius ships as a per-customer Kubernetes deployment, every
+  API base URL and MCP endpoint is tenant-specific rather than a single shared public host. Founded by Ajay Khanna; SOC 2 Type II certified; 5x
+  Gartner Magic Quadrant Visionary for Analytics and BI Platforms (2022-2026).'
 url: https://raw.githubusercontent.com/api-evangelist/tellius/refs/heads/main/apis.yml
 accessModel:
   pricing: paid
@@ -67,71 +63,28 @@ tags_raw:
 - Financial Planning
 - Machine-Learning
 - Real-Time
-apis:
-- aid: tellius:tellius-platform-api
-  name: Tellius Platform API
-  description: 'The Tellius backend REST and WebSocket API. Authenticate against
-    /api/auth/login for a JWT (or a cookie session), then call the Insights APIs
-    (list, delete, notifications), the Search APIs (a WebSocket channel carrying
-    history, suggestion, validation and query-execution messages correlated by
-    corrId), and the ML Model APIs (OAuth2 client_credentials, JSON and file
-    prediction submission, paginated and CSV result retrieval). Tellius is deployed
-    per customer, so the base host is the customer''s own Tellius domain.'
-  humanURL: https://help.tellius.com/api
-  baseURL: https://{tellius-deployment-host}
-  tags:
-  - Analytics
-  - Insights
-  - Search
-  - Machine Learning
-  tags_raw:
-  - Analytics
-  - Insights
-  - Search
-  - Machine Learning
-  - Machine-Learning
-  properties:
-  - type: Documentation
-    url: https://help.tellius.com/api
-  - type: APIReference
-    url: https://help.tellius.com/api
-  - type: Authentication
-    url: authentication/tellius-authentication.yml
-  - type: ErrorCatalog
-    url: errors/tellius-problem-types.yml
-- aid: tellius:tellius-mcp-server
-  name: Tellius MCP Server
-  description: 'Tellius exposes its analytics engine through a hosted MCP server
-    that runs inside each Tellius deployment. It speaks MCP over streamable HTTP
-    (SSE available for older clients) and publishes 25 tools, 6 resources and 3
-    prompts, including tellius_ask (natural-language question to governed SQL and
-    results), tellius_deep_insight (multi-step agentic root cause investigation),
-    and headless workflow, schedule and memory management. Access is OAuth: the
-    endpoint answers unauthenticated calls with an RFC 9728 WWW-Authenticate
-    challenge pointing at /.well-known/oauth-protected-resource.'
-  humanURL: https://help.tellius.com/kaiya/tellius-mcp-server
-  baseURL: https://{tellius-deployment-host}/mcp
-  tags:
-  - MCP
-  - Agentic Analytics
-  - Artificial Intelligence
-  tags_raw:
-  - Model Context Protocol
-  - Agentic Analytics
-  - Artificial Intelligence
-  properties:
-  - type: MCPServer
-    url: mcp/tellius-mcp.yml
-  - type: Documentation
-    url: https://help.tellius.com/kaiya/tellius-mcp-server
-  - type: OAuthScopes
-    url: scopes/tellius-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Spectral
+  url: rules/tellius-rules.yml
+- type: JSONLD
+  url: json-ld/tellius-context.jsonld
+- type: Vocabulary
+  url: vocabulary/tellius-vocabulary.yml
+- type: Deprecation
+  url: lifecycle/tellius-lifecycle.yml
+- type: Hosts
+  url: hosts/tellius-hosts.yml
+- type: Vendors
+  url: vendors/tellius-vendors.yml
+- type: SDKs
+  url: packages/tellius-packages.yml
+- type: Security
+  url: https://help.tellius.com/settings/security
 - type: Website
   url: https://www.tellius.com/
 - type: DeveloperPortal
@@ -194,8 +147,83 @@ common:
   url: skills/_index.yml
 - type: DomainSecurity
   url: security/tellius-domain-security.yml
+apis:
+- aid: tellius:tellius-platform-api
+  name: Tellius Platform API
+  description: The Tellius backend REST and WebSocket API. Authenticate against /api/auth/login for a JWT (or a cookie session), then call the
+    Insights APIs (list, delete, notifications), the Search APIs (a WebSocket channel carrying history, suggestion, validation and query-execution
+    messages correlated by corrId), and the ML Model APIs (OAuth2 client_credentials, JSON and file prediction submission, paginated and CSV result
+    retrieval). Tellius is deployed per customer, so the base host is the customer's own Tellius domain.
+  humanURL: https://help.tellius.com/api
+  baseURL: https://{tellius-deployment-host}
+  tags:
+  - Analytics
+  - Insights
+  - Search
+  - Machine Learning
+  tags_raw:
+  - Analytics
+  - Insights
+  - Search
+  - Machine Learning
+  - Machine-Learning
+  properties:
+  - type: Documentation
+    url: https://help.tellius.com/api
+  - type: APIReference
+    url: https://help.tellius.com/api
+  - type: Authentication
+    url: authentication/tellius-authentication.yml
+- aid: tellius:tellius-mcp-server
+  name: Tellius MCP Server
+  description: 'Tellius exposes its analytics engine through a hosted MCP server that runs inside each Tellius deployment. It speaks MCP over
+    streamable HTTP (SSE available for older clients) and publishes 25 tools, 6 resources and 3 prompts, including tellius_ask (natural-language
+    question to governed SQL and results), tellius_deep_insight (multi-step agentic root cause investigation), and headless workflow, schedule
+    and memory management. Access is OAuth: the endpoint answers unauthenticated calls with an RFC 9728 WWW-Authenticate challenge pointing at
+    /.well-known/oauth-protected-resource.'
+  humanURL: https://help.tellius.com/kaiya/tellius-mcp-server
+  baseURL: https://{tellius-deployment-host}/mcp
+  tags:
+  - MCP
+  - Agentic Analytics
+  - Artificial Intelligence
+  tags_raw:
+  - Model Context Protocol
+  - Agentic Analytics
+  - Artificial Intelligence
+  properties:
+  - type: MCPServer
+    url: mcp/tellius-mcp.yml
+  - type: Documentation
+    url: https://help.tellius.com/kaiya/tellius-mcp-server
+  - type: OAuthScopes
+    url: scopes/tellius-scopes.yml
+- aid: tellius:tellius-api
+  name: Tellius API
+  description: 'Tellius API as documented publicly: 7 operations (Insights, OAuth token and ML prediction endpoints). Contract generated from
+    the documentation by API Evangelist (2026-10-20); not
+
+    the provider''s own document.'
+  humanURL: https://help.tellius.com/api
+  baseURL: https://{tellius-deployment-host}
+  properties:
+  - type: OpenAPI
+    url: openapi/_ae-authored/tellius-openapi-generated.yml
+    x-provenance: generated
+  - type: JSONSchema
+    url: json-schema/tellius-get-proxy-ml-external-predict-download-response-schema.json
+  - type: JSONSchema
+    url: json-schema/tellius-get-proxy-ml-external-predict-view-response-schema.json
+  - type: JSONSchema
+    url: json-schema/tellius-post-oauth-client-credentials-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/tellius-post-oauth-refresh-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/tellius-post-proxy-ml-external-predict-file-response-schema.json
+  - type: JSONSchema
+    url: json-schema/tellius-put-insight-insightid-request-schema.json
 x-enrichment:
-  date: '2026-08-30'
+  date: '2026-10-20'
   status: enriched
-  artifacts_added: 25
-  pass: local-v1
+  artifacts_added: 5
+  pass: local-v5

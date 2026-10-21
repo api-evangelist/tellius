@@ -5,7 +5,7 @@ api: Tellius MCP Server
 generated: '2026-08-30'
 method: generated
 source: https://help.tellius.com/kaiya/tellius-mcp-server
-operations:
+mcp_tools:
   - tellius_list_business_views
   - tellius_get_business_view_details
   - tellius_ask

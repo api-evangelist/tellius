@@ -1,0 +1,175 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/_ae-authored/tellius-openapi-generated.yml
+vocabulary:
+  name: Tellius Domain Vocabulary
+  description: 'Terms declared by Tellius''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: GetApiMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetApiMdResponse
+  - term: GetApiSearchApisMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts, sources.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetApiSearchApisMdResponse
+  - term: GetGettingStartedAdminGuideMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedAdminGuideMdResponse
+  - term: GetGettingStartedAdminGuideMonitoringUsageAndSystemResources
+    definition: 'Object declared by the contract with fields: content.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedAdminGuideMonitoringUsageAndSystemResources
+  - term: GetGettingStartedAdminGuideWhatIsIceMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedAdminGuideWhatIsIceMdResponse
+  - term: GetGettingStartedFaqsMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedFaqsMdResponse
+  - term: GetGettingStartedFaqsEmbeddingFaqsMdResponse
+    definition: 'Object declared by the contract with fields: content.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedFaqsEmbeddingFaqsMdResponse
+  - term: GetGettingStartedFaqsEnvironmentFaqsMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedFaqsEnvironmentFaqsMdResponse
+  - term: GetGettingStartedFaqsInsightsFaqsMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts, sources.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedFaqsInsightsFaqsMdResponse
+  - term: GetGettingStartedFaqsSearchFaqsMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedFaqsSearchFaqsMdResponse
+  - term: GetGettingStartedFaqsVizpadsFaqsMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedFaqsVizpadsFaqsMdResponse
+  - term: GetGettingStartedQuickStartGuidesMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedQuickStartGuidesMdResponse
+  - term: GetGettingStartedSayHelloToTelliusMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedSayHelloToTelliusMdResponse
+  - term: GetGettingStartedTelliusBestPracticesMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedTelliusBestPracticesMdResponse
+  - term: GetGettingStartedTelliusHomePageMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetGettingStartedTelliusHomePageMdResponse
+  - term: PutInsightInsightidRequest
+    definition: 'Object declared by the contract with fields: consumed.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/PutInsightInsightidRequest
+  - term: PostOauthClientCredentialsTokenResponse
+    definition: 'Object declared by the contract with fields: access_token, refresh_token, token_type.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/PostOauthClientCredentialsTokenResponse
+  - term: PostOauthRefreshTokenResponse
+    definition: 'Object declared by the contract with fields: access_token, refresh_token, token_type.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/PostOauthRefreshTokenResponse
+  - term: GetProxyMlExternalPredictDownloadResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetProxyMlExternalPredictDownloadResponse
+  - term: PostProxyMlExternalPredictFileResponse
+    definition: 'Object declared by the contract with fields: predictedDataId.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/PostProxyMlExternalPredictFileResponse
+  - term: GetProxyMlExternalPredictViewResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetProxyMlExternalPredictViewResponse
+  - term: GetSettingsPreferencesMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetSettingsPreferencesMdResponse
+  - term: GetSettingsPreferencesHelpAndSupportMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetSettingsPreferencesHelpAndSupportMdResponse
+  - term: GetSettingsVizpadBackupAndRestoreMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetSettingsVizpadBackupAndRestoreMdResponse
+  - term: GetTellius62ApiMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts, sources.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetTellius62ApiMdResponse
+  - term: GetTellius63ApiMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts, sources.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetTellius63ApiMdResponse
+  - term: GetTellius63GettingStartedAdminGuideMonitoringUsageAndSystem
+    definition: 'Object declared by the contract with fields: answer, excerpts, sources.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetTellius63GettingStartedAdminGuideMonitoringUsageAndSystem
+  - term: GetTellius63GettingStartedFaqsMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts, sources.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetTellius63GettingStartedFaqsMdResponse
+  - term: GetTellius63SettingsPreferencesMdResponse
+    definition: 'Object declared by the contract with fields: answer, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetTellius63SettingsPreferencesMdResponse
+  - term: GetTellius63VizpadsExploreActionsInEditModeCopyToClipboardMd
+    definition: 'Object declared by the contract with fields: content, excerpts.'
+    tags:
+    - Object
+    source: openapi/_ae-authored/tellius-openapi-generated.yml#/components/schemas/GetTellius63VizpadsExploreActionsInEditModeCopyToClipboardMd
+  - term: Insight
+    definition: 'Resource group in the contract; its operation GET /insight/insightID: Mark notifications as read for an Insight.'
+    tags:
+    - Resource Group
+    source: openapi/_ae-authored/tellius-openapi-generated.yml
+  - term: Oauth
+    definition: 'Resource group in the contract; its operation POST /oauth/client_credentials_token: POST /oauth/client_credentials_token'
+    tags:
+    - Resource Group
+    source: openapi/_ae-authored/tellius-openapi-generated.yml
+  - term: Proxy
+    definition: 'Resource group in the contract; its operation GET /proxy/ml/external/predict/download: GET /proxy/ml/external/predict/download'
+    tags:
+    - Resource Group
+    source: openapi/_ae-authored/tellius-openapi-generated.yml
